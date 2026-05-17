@@ -21,9 +21,9 @@ Here an undirected-non-negative-weighted graph is a must to run Dijkstra and in 
 In the creation of that graph I inserted a 15/21 probability of zero value --> increase sparsity statistically.  
 The created adjacency matrix is passed to the Graph Class that builds up a more scalable nested-object-like structure adjacency list based.  
 Adjacency matrices are pretty handy sometimes and generating graphs is more immediate (to me), but some algorithms run pretty bad on  
-adjacency matrices and using lists is faster, which is more convenient for certain applications.
-Last thing, below there is a chart exposing the runtime benchmark for the algorithms and initially I made a mistake. I implemented a  
-priority queue max-heap based and then, the execution time exploded. After having learned the lesson, I corrected to implement a min-heap one.  
+adjacency matrices and using lists is faster, which is more convenient for certain applications.  
+Last thing, below there is a chart which exposes the runtime benchmark for the algorithms and initially I made a mistake.  
+I implemented a priority queue max-heap based and then, the execution time exploded. After having learned the lesson, I corrected to implement a min-heap one.  
 After having seen the execution time becoming O(E log E) - like instead of quadratic, I could start sleeping well again at night.
 
 ---
