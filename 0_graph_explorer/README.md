@@ -148,13 +148,22 @@ The runtime is measured using:
 std::chrono::high_resolution_clock
 ```
 
-and averaged over multiple independent runs. 
+and averaged over 50 independent runs for each node number. 
 
 Here below the results: 
 * Orange Plot: Min-heap implementation 
 * Blue Plot: Max-heap implementation (implemented by mistake by the author initially)  
 
 ![Benchmark Plot](./images/exec_time_benchmark.png)
+
+
+### In which some values are:  
+
+10 nodes   → ~0.002 ms  
+100 nodes  → ~0.237 ms  
+1000 nodes → ~15 ms  
+5000 nodes → ~250 ms  
+
 
 ## Current Observations
 
