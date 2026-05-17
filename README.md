@@ -14,9 +14,9 @@ At that time I learned a few lessons:
 
 
 So here we are, after some years...  
-This portfolio acts as a strategy of mine to fill gaps and fix bad experiences. It is used to revisit mid/low level programming techniques, apply modern 
-C++ software design and algorithmic reasoning that I use every day in Python-based workflows at work, even though I am a Digital Physical Implementation Engineer.
-Ultimately, this portfolio is meant to help me grow into a more complete software engineer, capable of building production-ready software.
+This portfolio acts as a strategy of mine to fill gaps and fix bad experiences.  
+It is used to revisit mid/low level programming techniques, apply modern C++ software design and algorithmic reasoning that I use every day in Python-based workflows at work, even though I am a Digital Physical Implementation Engineer.
+Ultimately, this portfolio is meant to help me grow into a more complete software engineer, capable of building production-ready C++ software.
 
 Then, below there is the list of C++ projects that compose this portfolio.  
 
