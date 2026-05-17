@@ -2,9 +2,10 @@
 
 ## Motivations
 
-I got in touch with C++ in my second year of my Bachelor's Degree. At that time, I got a rough experience because after having spent 2 months in a big project for graph loop detection using linked lists, I got an unfair mark because my professor didn't read my code, and 
-I had only 3 hours of sleeping time the night before the presentation, because I was completing the project.  
-So I have to admit, the presentation was strongly biased by me not being able to focus and communicate efficiently, even though the software was working correctly.
+I got in touch with C++ in my second year of my Bachelor's Degree.  
+At that time, I got a rough experience because after having spent 2 months in a big project for graph loop detection using linked lists, I got an unfair mark.
+I remember I had only 3 hours of sleeping time the night before the presentation, because I was completing the project and lately I also discovered my professor's assistant didn't read my code at all.   
+So I have to admit, the mark was strongly biased by me not being able to focus and communicate efficiently, even though the software was working correctly.
 
 At that time I learned a few lessons:  
 * Great subjects and miserable experiences bring to bad memories in general
