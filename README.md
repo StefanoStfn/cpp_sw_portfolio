@@ -20,7 +20,7 @@ Ultimately, this portfolio is meant to help me grow into a more complete softwar
 
 Then, below there is the list of C++ projects that compose this portfolio.  
 
-# Compact Project Recap Template
+# Projects Recap
 
 ```md
 ## 0 Graph Explorer
