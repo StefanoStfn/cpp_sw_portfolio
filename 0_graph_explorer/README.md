@@ -159,10 +159,10 @@ Here below the results:
 
 ### In which some values are:  
 
-10 nodes   → ~0.002 ms  
-100 nodes  → ~0.237 ms  
-1000 nodes → ~15 ms  
-5000 nodes → ~250 ms  
+    - 10 nodes   → ~0.08 us  
+    - 100 nodes  → ~195 us  
+    - 1000 nodes → ~9.7 ms  
+    - 5000 nodes → ~215 ms  
 
 
 ## Current Observations
