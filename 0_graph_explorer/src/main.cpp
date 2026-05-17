@@ -67,9 +67,9 @@ int main(const int argc, char *argv[])
             auto end = std::chrono::high_resolution_clock::now();
             auto duration = chrono::duration_cast<chrono::microseconds>(end - start);
             execution_times[counter] += duration.count()/static_cast<double>(iterations);
-            for(int i = 0; i < node_number; ++i)
+            for(int v = 0; v < node_number; v++)
             {
-                delete[] adjacency_matrix[i];
+                delete[] adjacency_matrix[v];
             }
             delete[] adjacency_matrix;
         }
