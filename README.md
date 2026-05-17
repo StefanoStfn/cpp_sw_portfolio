@@ -29,12 +29,13 @@ C++ graph exploration with shortest-path scanner project.
 
 ### Structure
 
-
 0_graph_explorer/
 ├── include/
 ├── src/
 ├── tests/
-└── images/
+├── images/
+├── CMakeLists.txt
+└── README.md
 
 
 ### Folder Purpose
