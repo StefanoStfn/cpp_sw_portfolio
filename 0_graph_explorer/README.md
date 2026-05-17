@@ -143,7 +143,7 @@ Here below the results:
 
 * Incorrect max-heap ordering drastically worsens performance.
     ```text
-    O(V²)
+    ≈O(V²)
     ```
 * Proper min-heap ordering restores expected Dijkstra behavior.
     ```text
