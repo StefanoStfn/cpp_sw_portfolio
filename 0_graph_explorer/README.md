@@ -28,6 +28,23 @@ After having seen the execution time becoming O(E log E) - like instead of quadr
 
 ---
 
+# Learning Goals
+
+This project is intended as both:
+
+* a graph-algorithm implementation project
+* a systems-programming and modern C++ learning project
+
+with focus on:
+
+* algorithmic complexity
+* memory ownership
+* RAII
+* testing
+* profiling
+---
+
+
 ## Project Structure
 
 ```text
@@ -149,19 +166,7 @@ Here below the results:
     ```text
     O(E log E)
     ```
+* Peak memory usage observed around 200 MB for large graph sizes (5k x 5k matrices).
+
+* Adjacency matrices are extremely memory expensive for sparse graphs representations. 
 ---
-
-# Learning Goals
-
-This project is intended as both:
-
-* a graph-algorithm implementation project
-* a systems-programming and modern C++ learning project
-
-with focus on:
-
-* algorithmic complexity
-* memory ownership
-* RAII
-* testing
-* profiling
