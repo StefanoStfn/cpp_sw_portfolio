@@ -12,8 +12,8 @@ class node
     public:
         node(
             const int* connection_array,
-            int id,
-            const int node_number
+            const int& id,
+            const int& node_number
         );
         int get_id() const {return id; };
         std::vector<edge> get_edge_vect() const {return edge_vect; };

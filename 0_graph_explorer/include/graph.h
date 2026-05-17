@@ -9,14 +9,14 @@
 class graph
 {
     public:
-        graph(int** adjacency_matrix, const int node_number);
+        graph(int** adjacency_matrix, const int& node_number);
         std::pair<std::vector<int>, int> lazy_dijkstra(
-            const int start_node,
-            const int end_node
+            const int& start_node,
+            const int& end_node
         );
 
     private:
-        std::vector<edge> get_neighbours(const int node_index);
+        std::vector<edge> get_neighbours(const int& node_index);
         int node_number;
         ///Interface to nodes
         std::vector<node> nodes_vect;

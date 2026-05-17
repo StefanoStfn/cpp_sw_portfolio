@@ -14,12 +14,12 @@
 using namespace std;
 
 int** generate_weighted_graph(
-    const int node_number
+    int& node_number
 );
 
 void print_graph_on_file(
     int** adjacency_matrix,
-    const int node_number
+    int& node_number
 );
 
 int main(const int argc, char *argv[])
@@ -37,7 +37,8 @@ int main(const int argc, char *argv[])
     vector<int> nodes{
         10,20,30,40,50,60,70,80,90,100,
         200,300,400,500,600,700,800,900,
-        1000,2000,3000,4000,5000};
+        1000,2000,3000,4000,5000
+    };
     vector<int>::iterator n_number_it;
     for (n_number_it=nodes.begin(); n_number_it!=nodes.end(); n_number_it++)
     {
@@ -93,7 +94,7 @@ int main(const int argc, char *argv[])
 }
 
 
-int** generate_weighted_graph(const int node_number)
+int** generate_weighted_graph(int& node_number)
 {
     /// This function creates a ranom undirectional weighted graph
     /// Variable definitions
@@ -141,7 +142,7 @@ int** generate_weighted_graph(const int node_number)
 }
 
 
-void print_graph_on_file(int** adjacency_matrix, const int node_number)
+void print_graph_on_file(int** adjacency_matrix, int& node_number)
 {
     // This function dump the matrix output in a csv file
     //

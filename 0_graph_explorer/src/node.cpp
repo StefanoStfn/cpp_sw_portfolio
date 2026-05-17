@@ -6,8 +6,8 @@
 
 node::node(
     const int* connection_array,
-    const int id,
-    const int node_number
+    const int& id,
+    const int& node_number
 )
 {
     this->id = id;
