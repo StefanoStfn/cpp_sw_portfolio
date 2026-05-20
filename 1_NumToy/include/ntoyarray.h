@@ -21,6 +21,7 @@ namespace numtoy
         public:
             NToyArray(std::vector<std::size_t> shape);
             const std::vector<std::size_t>& shape() const { return shape_; };
+            std::string shape_string() const;
             // Buffer Access
             const std::vector<double>& get_buffer() const { return buffer_; };
             void set_buffer(const std::vector<double>& buffer);

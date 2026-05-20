@@ -46,6 +46,24 @@ namespace numtoy
         this->buffer_ = buffer;
     }
 
+    std::string NToyArray::shape_string() const
+    {
+        std::ostringstream oss;
+        oss << "(";
+        for (std::size_t i = 0; i < shape_.size(); ++i)
+        {
+            if (i < shape_.size()-1)
+            {
+                oss << shape_[i] << ", ";
+            }
+            else
+            {
+                oss << shape_[i] << ")";
+            }
+        }
+        return oss.str();
+    }
+
     double& NToyArray::operator()(const std::vector<std::size_t>& indices)
     {
         std::ostringstream oss;
