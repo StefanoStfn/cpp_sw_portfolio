@@ -1,14 +1,9 @@
-//
-// Created by Martina on 18/05/2026.
-//
-
-
-
-#include "../include/ntoyarray.h"
 
 #include <numeric>
 #include <sstream>
 #include <algorithm>
+#include "../include/ntoyarray.h"
+
 namespace numtoy
 {
     NToyArray::NToyArray(std::vector<std::size_t> shape)
@@ -32,8 +27,23 @@ namespace numtoy
         // Dummy initialization
         for (std::size_t i = 0; i < buffer_shape; ++i)
         {
-            buffer_[i] = i;
+            buffer_[i] = (double)i;
         }
+    }
+
+    void NToyArray::set_buffer(const std::vector<double>& buffer)
+    {
+        if (buffer.size() != this->buffer_.size())
+        {
+            std::ostringstream oss;
+            oss << "Buffer Size Mismatch, cannot overwrite it. ";
+            oss << "Provided Length: " << buffer.size() << ". ";
+            oss << "Expected " << this->buffer_.size() << std::endl;
+            throw std::invalid_argument(
+                oss.str()
+            );
+        }
+        this->buffer_ = buffer;
     }
 
     double& NToyArray::operator()(const std::vector<std::size_t>& indices)

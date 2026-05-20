@@ -26,7 +26,11 @@ namespace numtoy
     {
         public:
             NToyArray(std::vector<std::size_t> shape);
-            std::vector<std::size_t> shape() const { return shape_; };
+            const std::vector<std::size_t>& shape() const { return shape_; };
+            // Buffer Access
+            const std::vector<double>& get_buffer() const { return buffer_; };
+            void set_buffer(const std::vector<double>& buffer);
+            // Access Operator
             double& operator() (const std::vector<std::size_t>& indices);
             // Sum operators
             numtoy::NToyArray operator+ (const numtoy::NToyArray& b_array) const;
@@ -47,7 +51,6 @@ namespace numtoy
             std::vector<double> buffer_;
             // Methods
             std::size_t compute_index_(const std::vector<std::size_t>& indices);
-            void overwrite_buffer_(const std::vector<double>& buffer) { buffer_ = buffer; };
     };
 }
 
