@@ -9,12 +9,11 @@
 // recursive_transpose_: Recursively traverses multidimensional indices to rebuild the transposed buffer.
 // transpose: Reverses array axes and reconstructs the transposed multidimensional buffer.
 
-#include "../include/numtoy_lib.h"
-
 #include <algorithm>
 #include <numeric>
 #include <random>
 #include <stdexcept>
+#include "../include/numtoy_lib.h"
 
 namespace numtoy
 {
@@ -22,10 +21,14 @@ namespace numtoy
     {
         return b_array + a;
     }
+
+
     NToyArray operator* (double a, const NToyArray& b_array)
     {
         return b_array * a;
     }
+
+
     NToyArray operator- (double a, const NToyArray& b_array)
     {
         /*
@@ -45,6 +48,7 @@ namespace numtoy
         return new_array;
     }
 
+
     NToyArray operator/ (double a, const NToyArray& b_array)
     {
         /*
@@ -63,6 +67,116 @@ namespace numtoy
         new_array.set_buffer(b_buffer);
         return new_array;
     }
+
+
+    // General striding function for mapping multidim indices into an index
+    std::size_t compute_index_ (
+        const std::vector<std::size_t>& indices,
+        std::vector<std::size_t> shape)
+    {
+        /*
+         * Given an index vector, this multiplies the shape iteratively
+         * and return an index for the buffer.
+         * This same result can be obtained recursively too!
+         */
+        std::vector<std::size_t> stride_vector(shape.size(), 1);
+        std::vector<std::size_t> tmp_multiply(shape.size());
+        std::size_t out_index;
+        // evaluate strides
+        /*
+         * k*stride0 + l*stride1 + ...
+         * The for evaluates stride_ith
+         * the transform combine the information
+         */
+        for (size_t i = 0; i < shape.size()-1; ++i)
+        {
+
+            stride_vector[i] = std::accumulate(
+                shape.begin()+i+std::size_t{1},
+                shape.end(),
+                std::size_t{1},
+                std::multiplies<std::size_t>()
+            );
+        }
+        std::transform(
+            stride_vector.begin(),
+            stride_vector.end(),
+            indices.begin(),
+            tmp_multiply.begin(),
+            [](std::size_t a, std::size_t b){return a*b;}
+        );
+        // accumulate to get a single index for the buffer
+        out_index = std::accumulate(
+            tmp_multiply.begin(),
+            tmp_multiply.end(),
+            std::size_t{0}
+        );
+        return out_index;
+    }
+
+
+    void recursive_traversal_ (
+        std::vector<std::size_t>& shape,
+        std::vector<std::size_t>& actual_index_array,
+        const std::vector<double>& buffer,
+        std::size_t depth,
+        std::ostringstream& oss)
+    {
+        if (depth == shape.size())
+        {
+            std::size_t old_index = compute_index_(actual_index_array, shape);
+            oss << std::to_string(buffer[old_index]);
+        }
+        else
+        {
+            std::size_t first_axis_dim = shape[depth];
+            oss << "[";
+            for (std::size_t i = 0; i < first_axis_dim; ++i)
+            {
+                actual_index_array.push_back(i);
+                recursive_traversal_(
+                    shape,
+                    actual_index_array,
+                    buffer,
+                    depth + 1,
+                    oss
+                );
+                if (i < first_axis_dim-1)
+                {
+                    oss << ",";
+                }
+                else
+                {
+                    oss << "]";
+                }
+                actual_index_array.pop_back();
+            }
+        }
+    }
+
+
+    std::ostream& operator<< (std::ostream& os, const NToyArray& array)
+    {
+        std::vector<std::size_t> shape = array.shape();
+        // Dynamic index variable
+        std::vector<std::size_t> actual_index_array;
+        std::ostringstream oss;// Depth tracking
+        std::size_t depth = 0;
+        const std::vector<double> buffer = array.get_buffer();
+        oss << "NToyArray(";
+        recursive_traversal_ (
+            shape,
+            actual_index_array,
+            buffer,
+            depth,
+            oss
+        );
+        oss << ", dtype=double)";
+        os << oss.str();
+        return os;
+    }
+
+
 
     // Custom initialization Matrices
 
@@ -109,50 +223,6 @@ namespace numtoy
         return new_array;
     }
 
-    // General striding function for mapping multidim indices into an index
-    std::size_t compute_index_ (
-        const std::vector<std::size_t>& indices,
-        std::vector<std::size_t> shape)
-    {
-        /*
-         * Given an index vector, this multiplies the shape iteratively
-         * and return an index for the buffer.
-         * This same result can be obtained recursively too!
-         */
-        std::vector<std::size_t> stride_vector(shape.size(), 1);
-        std::vector<std::size_t> tmp_multiply(shape.size());
-        std::size_t out_index;
-        // evaluate strides
-        /*
-         * k*stride0 + l*stride1 + ...
-         * The for evaluates stride_ith
-         * the transform combine the information
-         */
-        for (size_t i = 0; i < shape.size()-1; ++i)
-        {
-
-            stride_vector[i] = std::accumulate(
-                shape.begin()+i+std::size_t{1},
-                shape.end(),
-                std::size_t{1},
-                std::multiplies<std::size_t>()
-            );
-        }
-        std::transform(
-            stride_vector.begin(),
-            stride_vector.end(),
-            indices.begin(),
-            tmp_multiply.begin(),
-            [](std::size_t a, std::size_t b){return a*b;}
-        );
-        // accumulate to get a single index for the buffer
-        out_index = std::accumulate(
-            tmp_multiply.begin(),
-            tmp_multiply.end(),
-            std::size_t{0}
-        );
-        return out_index;
-    }
 
     void recursive_transpose_ (
         std::vector<std::size_t>& shape,

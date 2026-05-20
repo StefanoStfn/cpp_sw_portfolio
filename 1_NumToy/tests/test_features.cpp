@@ -3,6 +3,7 @@
 // RandArrayTest: Tests rand() factory values stay within the requested numeric bounds.
 // LongAlgebraTest: Tests chained scalar and array arithmetic composition.
 // TransposeArrayTest: Tests default transpose behavior across 1D, 2D, 3D, 4D, and 5D shapes.
+// StringRepresentationTest: Tests << operator for string output formatting the array content.
 
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"
@@ -146,4 +147,34 @@ TEST(NToyArrayTest, TransposeArrayTest)
     new_array = numtoy::transpose(five_d_array);
     shape_vect = {10,4,3,2,1};
     EXPECT_TRUE(new_array.shape() == shape_vect);
+}
+
+TEST(NToyArrayTest, StringRepresentationTest)
+{
+    // 1D: shape {4}
+    numtoy::NToyArray a({4});
+    std::ostringstream oss ;
+    oss << a;
+    EXPECT_EQ(
+        "NToyArray([0.000000,1.000000,2.000000,3.000000], dtype=double)",
+        oss.str()
+    );
+
+    // 2D: shape {4,2}
+    numtoy::NToyArray b({4,2});
+    oss.str("");
+    oss << b;
+    EXPECT_EQ(
+        "NToyArray([[0.000000,1.000000],[2.000000,3.000000],[4.000000,5.000000],[6.000000,7.000000]], dtype=double)",
+        oss.str()
+    );
+
+    // 3D: shape {2,2,2}
+    numtoy::NToyArray c({2,2,2});
+    oss.str("");
+    oss << c;
+    EXPECT_EQ(
+        "NToyArray([[[0.000000,1.000000],[2.000000,3.000000]],[[4.000000,5.000000],[6.000000,7.000000]]], dtype=double)",
+        oss.str()
+    );
 }

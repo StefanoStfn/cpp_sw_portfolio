@@ -39,6 +39,7 @@ namespace numtoy
             numtoy::NToyArray operator/ (const numtoy::NToyArray& b_array) const;
             numtoy::NToyArray operator/ (double b) const;
 
+
         private:
             // Variables
             std::vector<std::size_t> shape_;
