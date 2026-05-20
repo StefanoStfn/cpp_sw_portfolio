@@ -1,6 +1,9 @@
-//
-// Created by Martina on 20/05/2026.
-//
+// ZerosArrayTest: Tests zeros() factory creation across multiple N-D shapes.
+// OnesArrayTest: Tests ones() factory creation across multiple N-D shapes.
+// RandArrayTest: Tests rand() factory values stay within the requested numeric bounds.
+// LongAlgebraTest: Tests chained scalar and array arithmetic composition.
+// TransposeArrayTest: Tests default transpose behavior across 1D, 2D, 3D, 4D, and 5D shapes.
+
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"
 

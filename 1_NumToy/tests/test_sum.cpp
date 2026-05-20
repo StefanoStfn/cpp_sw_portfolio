@@ -1,6 +1,7 @@
-//
-// Created by Martina on 20/05/2026.
-//
+// SumOperator1D: Tests 1D elementwise addition and scalar addition broadcasting.
+// SumOperator2D: Tests 2D elementwise addition and scalar addition broadcasting.
+// SumOperatorMultiDim: Tests multidimensional addition, chained scalar operations, and shape mismatch validation.
+
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"
 

@@ -1,19 +1,13 @@
-/*
-From Numpy Documentation: https://github.com/numpy/numpy/blob/main/doc/source/reference/arrays.ndarray.rst#id1
 
-"An instance of class :class:`ndarray` consists of a contiguous one-dimensional segment of computer memory
-(owned by the array, or by some other object), combined with an indexing scheme that
-maps N integers into the location of an item in the block."
-
-"A segment of memory is inherently 1-dimensional, and there are many different schemes
-for arranging the items of an N-dimensional array in a 1-dimensional block."
-
-Note of the author:
-CPUs are obviously optimized to run instructions sequentially.
-Doing Program Counter (PC) = PC + 1 in the microcode, or in the memory address is so cheap that it would be
-naive if that operation wouldn't be super optimized by electronics engineers.
-
-*/
+// NToyArray Constructor: Validates multidimensional shape construction and contiguous buffer initialization.
+// NToyArray::set_buffer: Validates safe buffer replacement while preserving shape-buffer invariants.
+// NToyArray::operator(): Tests multidimensional element access, shape validation, and bounds checking.
+// NToyArray::compute_index_: Maps multidimensional indices into contiguous row-major buffer offsets.
+// NToyArray::operator+: Implements elementwise multidimensional addition and scalar broadcasting.
+// NToyArray::operator-: Implements elementwise multidimensional subtraction and scalar broadcasting.
+// NToyArray::operator*: Implements elementwise multidimensional multiplication and scalar broadcasting.
+// NToyArray::operator/: Implements elementwise multidimensional division and scalar broadcasting.
+// --> left side operand is implemented in the numtoy_lib files
 
 #ifndef INC_1_NUMTOY_NTOYARRAY_H
 #define INC_1_NUMTOY_NTOYARRAY_H

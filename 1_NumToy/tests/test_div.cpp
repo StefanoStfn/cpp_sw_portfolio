@@ -1,6 +1,7 @@
-//
-// Created by Martina on 20/05/2026.
-//
+// DivOperator1D: Tests 1D elementwise division and scalar division broadcasting.
+// DivOperator2D: Tests 2D division behavior including NaN propagation and scalar division broadcasting.
+// DivOperatorMultiDim: Tests multidimensional division, chained scalar operations, and shape mismatch validation.
+
 #include <cmath>
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"

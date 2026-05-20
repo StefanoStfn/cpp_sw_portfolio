@@ -1,6 +1,13 @@
-//
-// Created by Martina on 18/05/2026.
-//
+// operator+(scalar, array): Implements left-side scalar addition broadcasting.
+// operator*(scalar, array): Implements left-side scalar multiplication broadcasting.
+// operator-(scalar, array): Implements left-side scalar subtraction broadcasting.
+// operator/(scalar, array): Implements left-side scalar division broadcasting.
+// zeros: Creates an N-dimensional array initialized with zeros.
+// ones: Creates an N-dimensional array initialized with ones.
+// rand: Creates an N-dimensional array initialized with uniformly distributed random values.
+// compute_index_: Maps multidimensional indices into contiguous row-major buffer offsets.
+// recursive_transpose_: Recursively traverses multidimensional indices to rebuild the transposed buffer.
+// transpose: Reverses array axes and reconstructs the transposed multidimensional buffer.
 
 #include "../include/numtoy_lib.h"
 

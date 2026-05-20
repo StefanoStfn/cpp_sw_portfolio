@@ -1,6 +1,5 @@
-//
-// Created by Martina on 18/05/2026.
-//
+// Reading: Tests multidimensional indexing, shape validation, and out-of-bounds exception handling.
+// Writing: Tests multidimensional element assignment and mutation persistence.
 
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"

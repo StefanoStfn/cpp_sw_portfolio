@@ -1,6 +1,7 @@
-//
-// Created by Martina on 20/05/2026.
-//
+// MulOperator1D: Tests 1D elementwise multiplication and scalar multiplication broadcasting.
+// MulOperator2D: Tests 2D elementwise multiplication and scalar multiplication broadcasting.
+// MulOperatorMultiDim: Tests multidimensional multiplication, chained scalar operations, and shape mismatch validation.
+
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"
 

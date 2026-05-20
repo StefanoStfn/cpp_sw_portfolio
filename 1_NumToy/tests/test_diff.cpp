@@ -1,6 +1,7 @@
-//
-// Created by Martina on 20/05/2026.
-//
+// DiffOperator1D: Tests 1D elementwise subtraction and scalar subtraction broadcasting.
+// DiffOperator2D: Tests 2D elementwise subtraction and scalar subtraction broadcasting.
+// DiffOperatorMultiDim: Tests multidimensional subtraction, chained scalar operations, and shape mismatch validation.
+
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"
 
