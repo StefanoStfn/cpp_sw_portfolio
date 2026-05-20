@@ -34,6 +34,11 @@ enable_testing()
 add_executable(
     test_lib
     tests/test_ntoyarray.cpp
+    tests/test_sum.cpp
+    tests/test_diff.cpp
+    tests/test_mul.cpp
+    tests/test_div.cpp
+    tests/test_features.cpp
 )
 
 target_link_libraries(
