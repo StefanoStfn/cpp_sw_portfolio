@@ -13,11 +13,13 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-
-add_executable(
-    1_NumToy
-    src/main.cpp
+FetchContent_Declare(
+    pybind11
+    URL https://github.com/pybind/pybind11/archive/refs/tags/v3.0.4.zip
 )
+
+
+FetchContent_MakeAvailable(pybind11)
 
 add_library(
     ntoy_lib
@@ -27,7 +29,11 @@ add_library(
     include/numtoy_lib.h
 )
 
-target_link_libraries(1_NumToy PRIVATE ntoy_lib)
+pybind11_add_module(
+    numtoy
+    src/bindings.cpp)
+
+target_link_libraries(numtoy PRIVATE ntoy_lib)
 
 enable_testing()
 

@@ -105,6 +105,7 @@ namespace numtoy
         return oss.str();
     }
 
+
     double& NToyArray::operator()(const std::vector<std::size_t>& indices)
     {
         std::ostringstream oss;
@@ -169,6 +170,63 @@ namespace numtoy
             std::size_t{0}
         );
         return out_index;
+    }
+
+    void NToyArray::recursive_traversal_ (
+        std::vector<std::size_t>& shape,
+        std::vector<std::size_t>& actual_index_array,
+        const std::vector<double>& buffer,
+        std::size_t depth,
+        std::ostringstream& oss)
+    {
+        if (depth == shape.size())
+        {
+            std::size_t old_index = compute_index_(actual_index_array);
+            oss << std::to_string(buffer[old_index]);
+        }
+        else
+        {
+            std::size_t first_axis_dim = shape[depth];
+            oss << "[";
+            for (std::size_t i = 0; i < first_axis_dim; ++i)
+            {
+                actual_index_array.push_back(i);
+                recursive_traversal_(
+                    shape,
+                    actual_index_array,
+                    buffer,
+                    depth + 1,
+                    oss
+                );
+                if (i < first_axis_dim-1)
+                {
+                    oss << ",";
+                }
+                else
+                {
+                    oss << "]";
+                }
+                actual_index_array.pop_back();
+            }
+        }
+    }
+
+    std::string NToyArray::to_string()
+    {
+        // Dynamic index variable
+        std::vector<std::size_t> actual_index_array;
+        std::ostringstream oss;// Depth tracking
+        std::size_t depth = 0;
+        oss << "NToyArray(";
+        recursive_traversal_ (
+            shape_,
+            actual_index_array,
+            buffer_,
+            depth,
+            oss
+        );
+        oss << ", dtype=double)";
+        return oss.str();
     }
 
     // Sum operators
@@ -260,6 +318,18 @@ namespace numtoy
             buffer_.end(),
             new_array.buffer_.begin(),
             [b](double a){return a-b;}
+        );
+        return new_array;
+    }
+
+    numtoy::NToyArray NToyArray::operator-() const
+    {
+        numtoy::NToyArray new_array(this->shape_);
+        std::transform(
+            this->buffer_.begin(),
+            this->buffer_.end(),
+            new_array.buffer_.begin(),
+            [](double a){return (-1)*a;}
         );
         return new_array;
     }

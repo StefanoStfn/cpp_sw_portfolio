@@ -160,6 +160,10 @@ TEST(NToyArrayTest, StringRepresentationTest)
         oss.str()
         );
     EXPECT_EQ(
+        "NToyArray([0.000000,1.000000,2.000000,3.000000], dtype=double)",
+        a.to_string()
+        );
+    EXPECT_EQ(
         "(4)",
         a.shape_string()
     );
@@ -173,6 +177,10 @@ TEST(NToyArrayTest, StringRepresentationTest)
         oss.str()
         );
     EXPECT_EQ(
+        "NToyArray([[0.000000,1.000000],[2.000000,3.000000],[4.000000,5.000000],[6.000000,7.000000]], dtype=double)",
+        b.to_string()
+        );
+    EXPECT_EQ(
         "(4, 2)",
         b.shape_string()
     );
@@ -184,6 +192,10 @@ TEST(NToyArrayTest, StringRepresentationTest)
     EXPECT_EQ(
         "NToyArray([[[0.000000,1.000000],[2.000000,3.000000]],[[4.000000,5.000000],[6.000000,7.000000]]], dtype=double)",
         oss.str()
+        );
+    EXPECT_EQ(
+        "NToyArray([[[0.000000,1.000000],[2.000000,3.000000]],[[4.000000,5.000000],[6.000000,7.000000]]], dtype=double)",
+        c.to_string()
         );
     EXPECT_EQ(
         "(2, 2, 2)",

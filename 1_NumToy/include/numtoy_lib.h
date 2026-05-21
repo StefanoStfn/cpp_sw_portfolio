@@ -34,7 +34,7 @@ namespace numtoy
     );
     // Transpose operation
     NToyArray transpose (const NToyArray& array);
-
+    inline std::string version() {return "1.0.0";};
 }
 
 #endif //INC_1_NUMTOY_NUMTOY_LIB_H

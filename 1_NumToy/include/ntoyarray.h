@@ -26,20 +26,22 @@ namespace numtoy
             // Buffer Access
             const std::vector<double>& get_buffer() const { return buffer_; };
             void set_buffer(const std::vector<double>& buffer);
+            std::string to_string();
             // Access Operator
             double& operator() (const std::vector<std::size_t>& indices);
             // Sum operators
-            numtoy::NToyArray operator+ (const numtoy::NToyArray& b_array) const;
-            numtoy::NToyArray operator+ (double b) const;
+            NToyArray operator+ (const NToyArray& b_array) const;
+            NToyArray operator+ (double b) const;
             // Difference Operators
-            numtoy::NToyArray operator- (const numtoy::NToyArray& b_array) const;
-            numtoy::NToyArray operator- (double b) const;
+            NToyArray operator- (const NToyArray& b_array) const;
+            NToyArray operator- (double b) const;
+            NToyArray operator-() const;
             // Multiplication
-            numtoy::NToyArray operator* (const numtoy::NToyArray& b_array) const;
-            numtoy::NToyArray operator* (double b) const;
+            NToyArray operator* (const NToyArray& b_array) const;
+            NToyArray operator* (double b) const;
             // Division
-            numtoy::NToyArray operator/ (const numtoy::NToyArray& b_array) const;
-            numtoy::NToyArray operator/ (double b) const;
+            NToyArray operator/ (const NToyArray& b_array) const;
+            NToyArray operator/ (double b) const;
 
 
         private:
@@ -48,6 +50,13 @@ namespace numtoy
             std::vector<double> buffer_;
             // Methods
             std::size_t compute_index_(const std::vector<std::size_t>& indices);
+            void recursive_traversal_ (
+                std::vector<std::size_t>& shape,
+                std::vector<std::size_t>& actual_index_array,
+                const std::vector<double>& buffer,
+                std::size_t depth,
+                std::ostringstream& oss
+            );
     };
 }
 

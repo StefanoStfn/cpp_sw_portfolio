@@ -20,6 +20,8 @@ TEST(NToyArrayTest, DiffOperator1D)
     //left side
     c_array = 450.22222222 - c_array;
     EXPECT_DOUBLE_EQ(450.22222222, c_array({0}));
+    b_array = -b_array;
+    EXPECT_DOUBLE_EQ(-12.0, b_array({0}));
 }
 
 
