@@ -20,6 +20,7 @@ namespace numtoy
     {
         public:
             NToyArray(std::vector<std::size_t> shape);
+            NToyArray(std::vector<std::size_t> shape, std::vector<double> data);
             const std::vector<std::size_t>& shape() const { return shape_; };
             std::string shape_string() const;
             // Buffer Access

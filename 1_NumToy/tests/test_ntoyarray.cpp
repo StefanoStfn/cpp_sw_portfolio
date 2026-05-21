@@ -1,8 +1,33 @@
+// Constructor: Tests the correct creation with correct data shape, when overriding the buffer from constructor
 // Reading: Tests multidimensional indexing, shape validation, and out-of-bounds exception handling.
 // Writing: Tests multidimensional element assignment and mutation persistence.
 
 #include <gtest/gtest.h>
 #include "../include/numtoy_lib.h"
+
+TEST(NToyArrayTest, Constructor)
+{
+
+    // Correct Declaration
+    EXPECT_NO_THROW(numtoy::NToyArray a_array({4,4}));
+    EXPECT_NO_THROW(
+        numtoy::NToyArray b_array(
+            {2, 2},
+            std::vector<double>{5.0, 60.0, 30.0, 125.920})
+    );
+    // Wrong Declaration
+    EXPECT_THROW(
+        numtoy::NToyArray c_array(
+            {2, 2},
+            std::vector<double>{10, 0, 40, 5.0, 60.0, 30.0, 125, 0}),
+            std::invalid_argument);
+    EXPECT_THROW(
+        numtoy::NToyArray c_array(
+            {4, 10, 2, 2},
+            std::vector<double>{10, 0, 40, 5.0, 60.0, 30.0, 125, 0}),
+        std::invalid_argument);
+}
+
 
 TEST(NToyArrayTest, Reading)
 {

@@ -6,8 +6,15 @@
 
 namespace numtoy
 {
+    // Basic Constructor
     NToyArray::NToyArray(std::vector<std::size_t> shape)
     {
+        if (shape.size() == 0)
+        {
+            throw std::invalid_argument(
+                "Impossible to instantiate a zero shaped MultiDimArray"
+            );
+        }
         for (std::size_t i = 0; i < shape.size(); ++i)
         {
             if (shape[i] == 0)
@@ -30,6 +37,40 @@ namespace numtoy
             buffer_[i] = (double)i;
         }
     }
+
+    // Constructor with data override
+    NToyArray::NToyArray(std::vector<std::size_t> shape, std::vector<double> data)
+    {
+        if (shape.size() == 0)
+        {
+            throw std::invalid_argument(
+                "Impossible to instantiate a zero shaped MultiDimArray"
+            );
+        }
+        for (std::size_t i = 0; i < shape.size(); ++i)
+        {
+            if (shape[i] == 0)
+            {
+                throw std::invalid_argument(
+                    "Cannot create Multidimensional Array with zero shape dimensions"
+                );
+            }
+        }
+        std::size_t array_len = std::accumulate(
+            shape.begin(),
+            shape.end(),
+            std::size_t{1},
+            std::multiplies<std::size_t>());
+        if (array_len != data.size())
+        {
+            throw std::invalid_argument(
+                "Incompatibility with the number of element in the array and provided shape"
+            );
+        }
+        this->buffer_ = data;
+        this->shape_ = shape;
+    }
+
 
     void NToyArray::set_buffer(const std::vector<double>& buffer)
     {
