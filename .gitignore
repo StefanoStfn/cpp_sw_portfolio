@@ -1,5 +1,5 @@
 */.idea/
 */cmake-build-debug/
 1_NumToy/src/main.cpp
-1_NumToy/python_tests/__pycache__
+*/python_tests/__pycache__
 */.vscode
