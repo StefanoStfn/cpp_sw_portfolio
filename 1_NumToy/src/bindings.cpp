@@ -8,21 +8,42 @@
 #include "../include/numtoy_lib.h"
 
 namespace py = pybind11;
-/*
-// Access Operator
-double& operator() (const std::vector<std::size_t>& indices);
-*/
 
 
 PYBIND11_MODULE(numtoy, m, py::mod_gil_not_used())
 {
-    // Header Methods
+    // Lib Methods
     m.doc() = "The version of the library"; // optional module docstring
     m.def("version", &numtoy::version, "The Library Version");
-    m.def("zeros", &numtoy::zeros, "MultiDimArray of Zeros");
-    m.def("ones", &numtoy::ones, "MultiDimArray of Ones");
-    m.def("rand", &numtoy::rand, "MultiDimArray of Uniform Rand Number");
-    m.def("transpose", &numtoy::transpose, "Perform the Transpose operation");
+    m.def(
+        "zeros",
+        &numtoy::zeros,
+        py::arg("shape"),
+        "MultiDimArray of Zeros"
+    );
+
+    m.def(
+        "ones",
+        &numtoy::ones,
+        py::arg("shape"),
+        "MultiDimArray of Ones"
+    );
+
+    m.def(
+        "rand",
+        &numtoy::rand,
+        py::arg("shape"),
+        py::arg("min"),
+        py::arg("max"),
+        "MultiDimArray of Uniform Rand Number"
+    );
+
+    m.def(
+        "transpose",
+        &numtoy::transpose,
+        py::arg("array"),
+        "Perform the Transpose operation"
+    );
 
     // NToyArray Class
     py::class_<numtoy::NToyArray>(m, "NToyArray")
