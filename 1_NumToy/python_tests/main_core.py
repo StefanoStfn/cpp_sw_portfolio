@@ -5,6 +5,7 @@ import unittest
 from test_math_operators import TestMathOperators
 from test_string_print import TestStringPrint
 from test_features import TestFeatures
+from test_tensor_access import TestTensorAccess
 
 class MainCore():
     """
@@ -15,7 +16,8 @@ class MainCore():
         self.test_classes: list = [
             TestMathOperators,
             TestStringPrint,
-            TestFeatures
+            TestFeatures,
+            TestTensorAccess
         ]
 
     def __call__(self):

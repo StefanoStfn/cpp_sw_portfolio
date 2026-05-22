@@ -236,18 +236,9 @@ namespace numtoy
         if (shape_ != b_array.shape())
         {
             oss << "MultiDim Array Dimension missmatch. Sum is not possible.";
-            oss << " ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << shape_[i] << ", ";
-            }
-
-            oss << ") != ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << b_array.shape()[i] << ", ";
-            }
-            oss << ")";
+            oss << b_array.shape_string();
+            oss << " != ";
+            oss << this->shape_string();
             throw std::invalid_argument(
                 oss.str()
             );
@@ -282,18 +273,9 @@ namespace numtoy
         if (shape_ != b_array.shape())
         {
             oss << "MultiDim Array Dimension missmatch. Difference is not possible.";
-            oss << " ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << shape_[i] << ", ";
-            }
-
-            oss << ") != ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << b_array.shape()[i] << ", ";
-            }
-            oss << ")";
+            oss << b_array.shape_string();
+            oss << " != ";
+            oss << this->shape_string();
             throw std::invalid_argument(
                 oss.str()
             );
@@ -341,18 +323,9 @@ namespace numtoy
         if (shape_ != b_array.shape())
         {
             oss << "MultiDim Array Dimension missmatch. element-Wise Multiplication is not possible.";
-            oss << " ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << shape_[i] << ", ";
-            }
-
-            oss << ") != ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << b_array.shape()[i] << ", ";
-            }
-            oss << ")";
+            oss << b_array.shape_string();
+            oss << " != ";
+            oss << this->shape_string();
             throw std::invalid_argument(
                 oss.str()
             );
@@ -388,18 +361,9 @@ namespace numtoy
         if (shape_ != b_array.shape())
         {
             oss << "MultiDim Array Dimension missmatch. Element-Wise Division is not possible.";
-            oss << " ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << shape_[i] << ", ";
-            }
-
-            oss << ") != ( ";
-            for (int i = 0; i < shape_.size(); ++i)
-            {
-                oss << b_array.shape()[i] << ", ";
-            }
-            oss << ")";
+            oss << b_array.shape_string();
+            oss << " != ";
+            oss << this->shape_string();
             throw std::invalid_argument(
                 oss.str()
             );

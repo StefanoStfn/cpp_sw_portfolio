@@ -13,22 +13,24 @@ namespace py = pybind11;
 PYBIND11_MODULE(numtoy, m, py::mod_gil_not_used())
 {
     // Lib Methods
-    m.doc() = "The version of the library"; // optional module docstring
-    m.def("version", &numtoy::version, "The Library Version");
+    m.doc() = "NumToy is a playful experiment of Stefano Pala"; // optional module docstring
+    m.def(
+        "version",
+        &numtoy::version,
+        "The Library Version"
+    );
     m.def(
         "zeros",
         &numtoy::zeros,
         py::arg("shape"),
         "MultiDimArray of Zeros"
     );
-
     m.def(
         "ones",
         &numtoy::ones,
         py::arg("shape"),
         "MultiDimArray of Ones"
     );
-
     m.def(
         "rand",
         &numtoy::rand,
@@ -37,7 +39,6 @@ PYBIND11_MODULE(numtoy, m, py::mod_gil_not_used())
         py::arg("max"),
         "MultiDimArray of Uniform Rand Number"
     );
-
     m.def(
         "transpose",
         &numtoy::transpose,
@@ -55,12 +56,21 @@ PYBIND11_MODULE(numtoy, m, py::mod_gil_not_used())
         // Constructor Overload
         .def(
             py::init<std::vector<std::size_t>, std::vector<double>>(),
-            py::arg("shape"),py::arg("data")
+            py::arg("shape"),
+            py::arg("data")
         )
         // Shape Method
-        .def("shape", &numtoy::NToyArray::shape_string)
+        .def(
+            "shape",
+            &numtoy::NToyArray::shape_string,
+            "Array representation in string format"
+        )
         // Flatten
-        .def("flatten", &numtoy::NToyArray::get_buffer)
+        .def(
+            "flatten",
+            &numtoy::NToyArray::get_buffer,
+            "Flatten array representation"
+        )
         // Math Operators
         .def(py::self + py::self)
         .def(py::self - py::self)
@@ -76,7 +86,9 @@ PYBIND11_MODULE(numtoy, m, py::mod_gil_not_used())
         .def(py::self / double())
         .def("__repr__", &numtoy::NToyArray::to_string)
         .def("__getitem__",
-            [](numtoy::NToyArray& arr, const std::vector<std::size_t>& indices) -> double {return arr(indices);})
+            [](numtoy::NToyArray& arr, const std::vector<std::size_t>& indices) -> double {return arr(indices);}
+        )
          .def("__setitem__",
-             [](numtoy::NToyArray& arr, const std::vector<std::size_t>& indices, double value) {arr(indices) = value;});
+            [](numtoy::NToyArray& arr, const std::vector<std::size_t>& indices, double value) {arr(indices) = value;}
+        );
 }

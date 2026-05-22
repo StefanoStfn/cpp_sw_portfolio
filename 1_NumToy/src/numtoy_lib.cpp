@@ -213,11 +213,10 @@ namespace numtoy
         std::uniform_real_distribution<> dis(min, max);
         std::size_t tmp_buffer_size = new_array.get_buffer().size();
         std::vector<double> buffer(tmp_buffer_size);
-        std::transform(
+        std::generate(
             buffer.begin(),
             buffer.end(),
-            buffer.begin(),
-            [&dis, &gen](double a){ return dis(gen);}
+            [&dis, &gen]() { return dis(gen); }
         );
         new_array.set_buffer(buffer);
         return new_array;
