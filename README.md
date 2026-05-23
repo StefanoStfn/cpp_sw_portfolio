@@ -85,7 +85,7 @@ C++ multidimensional array (Tensor) library with Python bindings.
 * N-dimensional dense array backed by a contiguous row-major `std::vector<double>` buffer
 * Runtime shape handling, stride-based indexing and multidimensional element access
 * Elementwise arithmetic operators with scalar-array support in both directions
-* Factory functions for `zeros`, `ones` and uniformly distributed random arrays
+* Factory functions for `zeros`, `ones` and uniformly distributed random arrays `rand`
 * Generic N-dimensional transpose through recursive index traversal and axis reversal
 * Python bindings with pybind11 exposing constructors, operators, indexing, flattening and representation
 * Pip-installable package using CMake and scikit-build-core
