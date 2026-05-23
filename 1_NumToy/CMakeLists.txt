@@ -30,6 +30,8 @@ add_library(
     include/numtoy_lib.h
 )
 
+set_target_properties(ntoy_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
 pybind11_add_module(
     numtoy
     src/bindings.cpp)
