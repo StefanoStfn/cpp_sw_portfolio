@@ -52,6 +52,45 @@ C++ graph exploration with shortest-path scanner project.
 * Runtime and memory observations on sparse random graphs
 
 ```
+---  
+
+```md
+
+## 1 NumToy
+
+C++ multidimensional array (Tensor) library with Python bindings.
+
+### Structure
+
+1_NumToy/
+├── include/
+├── src/
+├── tests/
+├── python_tests/
+├── CMakeLists.txt
+├── pyproject.toml
+├── LICENSE
+└── README.md
+
+### Folder Purpose
+
+* `include/` → NToyArray interface and NumToy public API declarations
+* `src/` → C++ array implementation, library functions and pybind11 bindings
+* `tests/` → GoogleTest validation suite for the C++ core
+* `python_tests/` → Python unittest suite for the exposed Python API
+* `pyproject.toml` → pip/scikit-build-core packaging configuration
+
+### Highlights
+
+* N-dimensional dense array backed by a contiguous row-major `std::vector<double>` buffer
+* Runtime shape handling, stride-based indexing and multidimensional element access
+* Elementwise arithmetic operators with scalar-array support in both directions
+* Factory functions for `zeros`, `ones` and uniformly distributed random arrays
+* Generic N-dimensional transpose through recursive index traversal and axis reversal
+* Python bindings with pybind11 exposing constructors, operators, indexing, flattening and representation
+* Pip-installable package using CMake and scikit-build-core
 ```
+---  
+
 
 
