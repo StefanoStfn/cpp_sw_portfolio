@@ -36,6 +36,7 @@ namespace LPEngine
             std::string getVarName(int varIdx) {return variable_names_.at(varIdx);};
             int getColNum() const {return column_number_;};
             std::vector<int> getArtificialVariables() const {return artificial_variables_;};
+            double getObjectiveFuncCoefficient(int varIdx) const;
         private:
             std::vector<int> artificial_variables_;
             std::vector<double> tableau_buffer_;

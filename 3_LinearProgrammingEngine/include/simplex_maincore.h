@@ -17,7 +17,6 @@ namespace LPEngine
             //void addConstraint();
             //void addObjectiveFunction();
             void feasibleMockStartup();
-            void artificialVarMockStartup();
             void unboundedMockStartup();
             void unfeasibleMockStartup();
             void degeneracyMockStartup();
@@ -43,6 +42,7 @@ namespace LPEngine
             bool loopCondition_ = true;
             double epsilon;
             bool degeneracy_ = false;
+            bool alternative_sol_ = false;
             double bigM;
             // Tableau
             std::optional<Tableau> tableau_;
@@ -54,6 +54,7 @@ namespace LPEngine
             void printFeasibleSolution(std::vector<int>& basic_variables);
             void printReading(std::vector<int>& basic_variables);
             bool artificialVariableCheck();
+            void alternativeSolutionsCheck(std::vector<int>& basic_variables);
     };
 }
 

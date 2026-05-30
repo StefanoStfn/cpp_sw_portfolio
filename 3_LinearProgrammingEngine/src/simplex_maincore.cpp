@@ -52,6 +52,8 @@ namespace LPEngine
         loopCondition_ = true;
         pivotResult = 0;
         tableau_->reset();
+        degeneracy_ = false;
+        alternative_sol_ = false;
 
     }
 
@@ -87,11 +89,6 @@ namespace LPEngine
         tableau_->overrideVariableNames(
             variable_names
         );
-    }
-
-    void SimplexMainCore::artificialVarMockStartup()
-    {
-
     }
 
     void SimplexMainCore::unboundedMockStartup()
@@ -196,7 +193,34 @@ namespace LPEngine
 
     void SimplexMainCore::alternativeOptSolMockStartup()
     {
-
+        // Objective function first row
+        // constraint following rows
+        const std::vector<double> buffer = {
+            -4, -2, 0, 0, 1, 0,
+            2, 5, 1, 0, 0, 10,
+            2, 1, 0, 1, 0, 4
+        };
+        constexpr int row_dim = 3;
+        constexpr int col_dim = 6;
+        tableau_.emplace();
+        tableau_->overrideBuffer(
+            row_dim, col_dim, buffer
+        );
+        std::vector<int> basic_variables = {2, 3};
+        tableau_->overrideBasicVariables(
+            basic_variables
+        );
+        const std::map<int, std::string> variable_names = {
+            {0, "x1"},
+            {1, "x2"},
+            {2, "s1"},
+            {3, "s2"},
+            {4, "P"},
+            {5, "RHS"}
+        };
+        tableau_->overrideVariableNames(
+            variable_names
+        );
     }
 
     void SimplexMainCore::executePivotStep()
@@ -236,6 +260,15 @@ namespace LPEngine
         std::cout << "\tOptimal Solution RHS: " ;
         std::cout << tableau_->getObjFunctionRHS() << std::endl ;
         printReading(basic_variables);
+        if (degeneracy_)
+        {
+            std::cout << "\tDegenerate solution: true" << std::endl ;
+        }
+        if (alternative_sol_)
+        {
+            std::cout << "\tAlternative solution: true" << std::endl ;
+        }
+
     }
 
     void SimplexMainCore::executeReading()
@@ -248,36 +281,19 @@ namespace LPEngine
             int col_id = tableau_->getColIdx();
             std::cout << "\tEntering variable column: ";
             std::cout << tableau_->getVarName(col_id) << std::endl;
-
         }
         else if (pivotResult == 0)
         {
-            if (tableau_->getArtificialVariables().size() == 0)
+            if (artificialVariableCheck())
             {
+                alternativeSolutionsCheck(basic_variables);
                 printFeasibleSolution(basic_variables);
-                if (degeneracy_)
-                {
-                    std::cout << "\tDegenerate solution: true" << std::endl ;
-
-                }
             }
             else
             {
-                if (artificialVariableCheck())
-                {
-                    printFeasibleSolution(basic_variables);
-                    if (degeneracy_)
-                    {
-                        std::cout << "\tDegenerate solution: true" << std::endl ;
-
-                    }
-                }
-                else
-                {
-                    std::cout << "\tStatus: Infeasible." << std::endl;
-                    std::cout << "\tReason: artificial variable remains positive" << std::endl;
-                    printReading(basic_variables);
-                }
+                std::cout << "\tStatus: Infeasible." << std::endl;
+                std::cout << "\tReason: artificial variable remains positive" << std::endl;
+                printReading(basic_variables);
             }
         }
     }
@@ -333,4 +349,21 @@ namespace LPEngine
         return true;
     }
 
+    void SimplexMainCore::alternativeSolutionsCheck(std::vector<int>& basic_variables)
+    {
+        // check the multiplying coefficient for the variables
+        // that are non-basic variables when algorithms terminates
+        int col_num = tableau_->getColNum();
+        for (int i = 0; i < col_num-2; i++)
+        {
+            bool is_basic = std::find(
+                basic_variables.begin(),
+                basic_variables.end(),
+                i ) != basic_variables.end();
+            if (!is_basic and std::abs(tableau_->getObjectiveFuncCoefficient(i)) < epsilon)
+            {
+                alternative_sol_ = true;
+            }
+        }
+    }
 }

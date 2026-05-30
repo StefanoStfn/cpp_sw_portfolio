@@ -216,4 +216,15 @@ namespace LPEngine {
         return -1;
     }
 
+    double Tableau::getObjectiveFuncCoefficient(int varIdx) const
+    {
+        if (varIdx > column_number_ - 2)
+        {
+            throw std::invalid_argument(
+              "VarIdx should be lower than available columns"
+            );
+        }
+        return tableau_buffer_[varIdx];
+    }
+
 }
