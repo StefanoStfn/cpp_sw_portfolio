@@ -42,6 +42,7 @@ namespace LPEngine
             bool loopCondition_ = true;
             // Tableau
             std::optional<Tableau> tableau_;
+            int pivotResult = 0;
             // Methods
             void executePivotStep();
             void checkTermination();
