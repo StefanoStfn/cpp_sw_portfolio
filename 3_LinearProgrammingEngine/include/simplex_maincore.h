@@ -13,7 +13,7 @@ namespace LPEngine
     class SimplexMainCore
     {
         public:
-            SimplexMainCore();
+            SimplexMainCore(double epsilon = 1E-6, double bigM = 1E6);
             //void addConstraint();
             //void addObjectiveFunction();
             void feasibleMockStartup();
@@ -22,6 +22,7 @@ namespace LPEngine
             void unfeasibleMockStartup();
             void degeneracyMockStartup();
             void alternativeOptSolMockStartup();
+            void resetEngine();
             void startEngine();
         private:
             // Variables
@@ -40,6 +41,9 @@ namespace LPEngine
             State_ present_state_ = State_::PhaseII;
             State_ next_state_ = State_::PhaseII;
             bool loopCondition_ = true;
+            double epsilon;
+            bool degeneracy_ = false;
+            double bigM;
             // Tableau
             std::optional<Tableau> tableau_;
             int pivotResult = 0;
@@ -47,6 +51,9 @@ namespace LPEngine
             void executePivotStep();
             void checkTermination();
             void executeReading();
+            void printFeasibleSolution(std::vector<int>& basic_variables);
+            void printReading(std::vector<int>& basic_variables);
+            bool artificialVariableCheck();
     };
 }
 

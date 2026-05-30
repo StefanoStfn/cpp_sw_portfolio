@@ -16,6 +16,20 @@ namespace LPEngine {
         //ctor
     }
 
+    void Tableau::reset()
+    {
+        row_number_ = 0;
+        column_number_ = 0;
+        colIdx = 0;
+        aij_stride_index = 0;
+        minRatioRowIndex = 0;
+        bIndex = 0;
+        ratio = 0.0;
+        minRatio = -1.0;
+        gp_index = 0;
+        basic_variables.clear();
+    }
+
     void Tableau::overrideBuffer(const int row, const int column, const std::vector<double> &buffer)
     {
         row_number_ = row;
@@ -28,9 +42,37 @@ namespace LPEngine {
         }
         tableau_buffer_ = buffer;
     }
-    void Tableau::overrideBasicVariables(const std::vector<int> &var_v)
+    void Tableau::overrideBasicVariables(const std::vector<int> &basic_v)
     {
-        basic_variables = var_v;
+        if (basic_v.size() != row_number_-1)
+        {
+            throw std::invalid_argument(
+                "overrideBasicVariables: size doesn't match"
+            );
+        }
+        basic_variables = basic_v;
+    }
+
+    void Tableau::overrideVariableNames(const std::map<int, std::string>& v_names)
+    {
+        if (v_names.size() != column_number_)
+        {
+            throw std::invalid_argument(
+                "overrideVariableNames: size doesn't match"
+            );
+        }
+        variable_names_ = v_names;
+    }
+
+    void Tableau::overrideArtificialVariables(const std::vector<int>& artificial_variables)
+    {
+        if (artificial_variables.size() >= row_number_-1)
+        {
+            throw std::invalid_argument(
+                "overrideArtificialVariables: BigM vars cannot be more than constraint rows"
+            );
+        }
+        this->artificial_variables_ = artificial_variables;
     }
 
     int Tableau::getIthRowIndex(const int rowIndex) const
