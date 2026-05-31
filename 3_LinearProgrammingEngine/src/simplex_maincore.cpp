@@ -75,29 +75,31 @@ namespace LPEngine
         // Objective function first row
         // constraint following rows
         const std::vector<double> buffer = {
-            -30, -40, 0, 0, 0, 1, 0,
-            2, 1, 1, 0, 0, 0, 10,
-            1, 1, 0, 1, 0, 0, 7,
-            1, 2, 0, 0, 1, 0, 12
+            -10, 57, 9, 24, 0, 0, 0, 1, 0,
+            0.5, -5.5, -2.5, 9, 1, 0, 0, 0, 0,
+            0.5, -1.5, -0.5, 1, 0, 1, 0, 0, 0,
+            1, 0, 0, 0, 0, 0, 1, 0, 1
         };
         constexpr int row_dim = 4;
-        constexpr int col_dim = 7;
+        constexpr int col_dim = 9;
         tableau_.emplace();
         tableau_->overrideBuffer(
             row_dim, col_dim, buffer
         );
-        std::vector<int> basic_variables = {2, 3, 4};
+        std::vector<int> basic_variables = {4, 5, 6};
         tableau_->overrideBasicVariables(
             basic_variables
         );
         const std::map<int, std::string> variable_names = {
-            {0, "x"},
-            {1, "y"},
-            {2, "s1"},
-            {3, "s2"},
-            {4, "s3"},
-            {5, "P"},
-            {6, "RHS"}
+            {0, "x1"},
+            {1, "x2"},
+            {2, "x3"},
+            {3, "x4"},
+            {4, "s1"},
+            {5, "s2"},
+            {6, "s3"},
+            {7, "P"},
+            {8, "RHS"}
         };
         tableau_->overrideVariableNames(
             variable_names

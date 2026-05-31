@@ -11,9 +11,9 @@
 
 
 namespace LPEngine {
-    Tableau::Tableau()
+    Tableau::Tableau(double epsilon)
     {
-        //ctor
+        this->epsilon_ = epsilon;
     }
 
     void Tableau::reset()
@@ -203,7 +203,7 @@ namespace LPEngine {
             tableau_buffer_.begin(),
             tableau_buffer_.begin() + column_number_ - 2
         );
-        if (*it < 0)
+        if (*it < -epsilon_)
         {
             return -1;
         }

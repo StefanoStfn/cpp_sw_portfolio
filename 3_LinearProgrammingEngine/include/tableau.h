@@ -17,7 +17,7 @@ namespace LPEngine
     class Tableau
     {
         public:
-            Tableau();
+            explicit Tableau(double epsilon = 1E-12);
             void reset();
             void overrideBuffer(
                 int row,
@@ -39,6 +39,7 @@ namespace LPEngine
             std::vector<int> getArtificialVariables() const {return artificial_variables_;}
             double getObjectiveFuncCoefficient(int varIdx) const;
         private:
+            double epsilon_;
             // Tableau State Variables
             std::vector<int> basic_variables_;
             std::map<int, std::string> variable_names_;
