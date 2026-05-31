@@ -35,12 +35,15 @@ enable_testing()
 
 add_executable(
     GoogleTestExec
-    tests/test_wrapper.cpp
+    tests/test_tableau.cpp
+    tests/test_simplex_maincore.cpp
 )
 
 target_link_libraries(
     GoogleTestExec
+    PRIVATE
     GTest::gtest_main
+    SimplexLibrary
 )
 
 include(GoogleTest)

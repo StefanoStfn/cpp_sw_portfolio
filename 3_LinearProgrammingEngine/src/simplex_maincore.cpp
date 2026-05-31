@@ -15,24 +15,36 @@ namespace LPEngine
         this->bigM = bigM;
     }
 
+    SimplexMainCore::SimplexMainCore(
+        Tableau& tableau,
+        double epsilon,
+        double bigM
+    )
+    {
+        this->tableau_ = tableau;
+        this->epsilon = epsilon;
+        this->bigM = bigM;
+    }
+
     void SimplexMainCore::startEngine()
     {
+        // Main State Machine
         while (loopCondition_)
         {
             present_state_ = next_state_;
 
             switch (present_state_)
             {
-                case State_::PhaseII:
+                case EngineState_::PhaseII:
                     std::cout << "PhaseII" << std::endl;
                     executePivotStep();
-                    next_state_ = State_::TerminationCheck;
+                    next_state_ = EngineState_::TerminationCheck;
                     break;
-                case State_::TerminationCheck:
+                case EngineState_::TerminationCheck:
                     std::cout << "TerminationCheck" << std::endl;
                     checkTermination();
                     break;
-                case State_::Reading:
+                case EngineState_::Reading:
                     std::cout << "Reading" << std::endl;
                     executeReading();
                     loopCondition_ = false;
@@ -47,14 +59,15 @@ namespace LPEngine
 
     void SimplexMainCore::resetEngine()
     {
-        present_state_ = State_::PhaseII;
-        next_state_ = State_::PhaseII;
+        // Reset the Variables for new runs
+        present_state_ = EngineState_::PhaseII;
+        next_state_ = EngineState_::PhaseII;
         loopCondition_ = true;
         pivotResult = 0;
         tableau_->reset();
         degeneracy_ = false;
         alternative_sol_ = false;
-
+        status_ = SolveStatus::NotStarted;
     }
 
     void SimplexMainCore::feasibleMockStartup()
@@ -225,37 +238,40 @@ namespace LPEngine
 
     void SimplexMainCore::executePivotStep()
     {
+        // Call the Tableau Pivot Step
         std::cout << "\tPivot Step" << std::endl;
         pivotResult = tableau_->executePivotStep();
-        next_state_ = State_::TerminationCheck;
+        next_state_ = EngineState_::TerminationCheck;
     }
 
 
 
     void SimplexMainCore::checkTermination()
     {
+        // Check termination is executed after every pivot step
         std::cout << "\tTerminationCheck" << std::endl;
         if (pivotResult == -1)
         {
             // -1 code: Unbounded problem
-            next_state_ = State_::Reading;
+            next_state_ = EngineState_::Reading;
         }
         else if (pivotResult == 0)
         {
             auto test = tableau_->objectiveFunctionTest();
             if (test == 0)
             {
-                next_state_ = State_::Reading;
+                next_state_ = EngineState_::Reading;
             }
             else if (test == -1)
             {
-                next_state_ = State_::PhaseII;
+                next_state_ = EngineState_::PhaseII;
             }
         }
     }
 
     void SimplexMainCore::printFeasibleSolution(std::vector<int>& basic_variables)
     {
+        // Used for formatting the feasible solution printing
         std::cout << "\tStatus: Feasible Optimal Solution Reached." << std::endl;
         std::cout << "\tOptimal Solution RHS: " ;
         std::cout << tableau_->getObjFunctionRHS() << std::endl ;
@@ -273,6 +289,10 @@ namespace LPEngine
 
     void SimplexMainCore::executeReading()
     {
+        //  0  Optimal
+        // -1  Infeasible
+        // -2  Unbounded
+        // -3  IterationLimitReached
         std::vector<int> basic_variables = tableau_->getBasicVariables();
         if (pivotResult == -1)
         {
@@ -281,16 +301,19 @@ namespace LPEngine
             int col_id = tableau_->getColIdx();
             std::cout << "\tEntering variable column: ";
             std::cout << tableau_->getVarName(col_id) << std::endl;
+            status_ = SolveStatus::Unbounded;
         }
         else if (pivotResult == 0)
         {
             if (artificialVariableCheck())
             {
+                status_ = SolveStatus::Optimal;
                 alternativeSolutionsCheck(basic_variables);
                 printFeasibleSolution(basic_variables);
             }
             else
             {
+                status_ = SolveStatus::Infeasible;
                 std::cout << "\tStatus: Infeasible." << std::endl;
                 std::cout << "\tReason: artificial variable remains positive" << std::endl;
                 printReading(basic_variables);
@@ -302,6 +325,7 @@ namespace LPEngine
         std::vector<int>& basic_variables
     )
     {
+        // Prints the variables and corresponding values
         int col_num = tableau_->getColNum();
         double rhs;
         for (int i = 0; i < col_num-2; i++)
@@ -329,7 +353,7 @@ namespace LPEngine
         }
     }
 
-    bool SimplexMainCore::artificialVariableCheck()
+    bool SimplexMainCore::artificialVariableCheck() const
     {
         // check if artificial variables are not basic variables
         // and if they are Basic one they rhs is lower than eps
@@ -366,4 +390,49 @@ namespace LPEngine
             }
         }
     }
+
+    double SimplexMainCore::getOptimaSolutionRHS() const
+    {
+        return tableau_->getObjFunctionRHS();
+    }
+
+    std::map<std::string, double> SimplexMainCore::getVariableValues()
+    {
+        std::map<std::string, double> variable_values;
+        auto basic_variables = tableau_->getBasicVariables();
+        int col_num = tableau_->getColNum();
+        double rhs;
+        for (int i = 0; i < col_num-2; i++)
+        {
+            bool is_basic = std::find(
+                basic_variables.begin(),
+                basic_variables.end(),
+                i
+                ) != basic_variables.end();
+            if (is_basic)
+            {
+                rhs = tableau_->getRHS(i);
+                if (std::abs(rhs) < epsilon)
+                {
+                    variable_values.insert(
+                        {tableau_->getVarName(i), 0.0}
+                    );
+                }
+                else
+                {
+                    variable_values.insert(
+                        {tableau_->getVarName(i), tableau_->getRHS(i)}
+                    );
+                }
+            }
+            else
+            {
+                variable_values.insert(
+                    {tableau_->getVarName(i), 0.0}
+                );
+            }
+        }
+        return variable_values;
+    }
+
 }

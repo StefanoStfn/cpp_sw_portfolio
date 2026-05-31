@@ -18,16 +18,17 @@ namespace LPEngine {
 
     void Tableau::reset()
     {
+        // Vector clearing
+        basic_variables_.clear();
+        variable_names_.clear();
+        artificial_variables_.clear();
+        tableau_buffer_.clear();
+        // Simple Variable clearing
         row_number_ = 0;
         column_number_ = 0;
         colIdx = 0;
-        aij_stride_index = 0;
         minRatioRowIndex = 0;
-        bIndex = 0;
-        ratio = 0.0;
         minRatio = -1.0;
-        gp_index = 0;
-        basic_variables.clear();
     }
 
     void Tableau::overrideBuffer(const int row, const int column, const std::vector<double> &buffer)
@@ -50,7 +51,7 @@ namespace LPEngine {
                 "overrideBasicVariables: size doesn't match"
             );
         }
-        basic_variables = basic_v;
+        basic_variables_ = basic_v;
     }
 
     void Tableau::overrideVariableNames(const std::map<int, std::string>& v_names)
@@ -97,7 +98,7 @@ namespace LPEngine {
         // basic Variable vector update
         // the basic variable that exit is the one associated with the row
         // chosen for pivoting
-        basic_variables[minRatioRowIndex-1] = colIdx;
+        basic_variables_[minRatioRowIndex-1] = colIdx;
         // normalize the row: rowi <-- rowi/aij
         if (minRatioRowIndex >= 0)
         {
@@ -112,15 +113,21 @@ namespace LPEngine {
 
     int Tableau::getStrideIndex(const int rowIndex, const int columnIndex) const
     {
+        if (columnIndex >= column_number_ or rowIndex >= row_number_)
+        {
+            throw std::invalid_argument(
+                "getStrideIndex: Row index or Column index incompatible with the buffer"
+            );
+        }
         return rowIndex * column_number_ + columnIndex;
     }
 
     void Tableau::getRowLowestRatio()
     {
-        aij_stride_index = 0;
+        int aij_stride_index = 0;
         minRatioRowIndex = 0;
-        bIndex = 0;
-        ratio = 0.0;
+        int bIndex = 0;
+        double ratio = 0.0;
         // this is used to track if unbound
         minRatio = -1.0;
         // loop for every constraint-row
@@ -157,6 +164,7 @@ namespace LPEngine {
 
     void Tableau::normalizePivotedRow()
     {
+        int gp_index;
         // normalize the row: rowi <-- rowi/aij
         auto a_ij = tableau_buffer_[getStrideIndex(minRatioRowIndex, colIdx)];
         for (int col_idx = 0; col_idx < column_number_ ; ++col_idx)
@@ -169,6 +177,7 @@ namespace LPEngine {
     void Tableau::gaussJordanEliminationStep()
     {
         // row_i ← row_i - factor * pivot_row
+        int gp_index = 0;
         auto jg_buffer_start_index = getStrideIndex(minRatioRowIndex, 0);
         double mul_factor = 0.0;
         double decr_factor = 0.0;
@@ -201,8 +210,19 @@ namespace LPEngine {
         return 0;
     }
 
-    double Tableau::getRHS(const int basicVarIndex)
+    double Tableau::getRHS(const int basicVarIndex) const
     {
+        bool is_basic = std::find(
+            basic_variables_.begin(),
+            basic_variables_.end(),
+            basicVarIndex) != basic_variables_.end();
+        if (!is_basic)
+        {
+            throw std::invalid_argument(
+                "getRHS: Basic variable not present in the vector"
+            );
+        }
+        int gp_index = 0;
         // this assumes that the reached solution is optimal
         // then only basic variable is 1 in only one row
         for (int row_idx = 1; row_idx < row_number_; row_idx++)
@@ -213,7 +233,10 @@ namespace LPEngine {
                 return tableau_buffer_[getStrideIndex(row_idx, column_number_-1)];
             }
         }
-        return -1;
+        // this should never be reached
+        throw std::runtime_error(
+            "getRHS: Basic variable found in basis vector but no unit row found"
+        );
     }
 
     double Tableau::getObjectiveFuncCoefficient(int varIdx) const
