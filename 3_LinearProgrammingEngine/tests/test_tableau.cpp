@@ -16,7 +16,9 @@
 class TableauTest : public ::testing::Test
 {
     protected:
-        LPEngine::Tableau tableau;
+        LPEngine::Tableau tableau = LPEngine::Tableau(
+            LPEngine::SolverStrategy::MostNegative
+        );
         // Objective function first row
         // constraint following rows
         void SetUp() override

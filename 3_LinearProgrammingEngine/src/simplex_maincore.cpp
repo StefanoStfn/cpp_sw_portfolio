@@ -9,21 +9,28 @@
 namespace LPEngine
 {
 
-    SimplexMainCore::SimplexMainCore(double epsilon, double bigM)
+    SimplexMainCore::SimplexMainCore(
+        double epsilon,
+        double bigM,
+        int max_iterations,
+        SolverStrategy solver_strategy
+    )
     {
         this->epsilon = epsilon;
         this->bigM = bigM;
+        this->max_iterations_ = max_iterations;
+        this->solver_strategy_ = solver_strategy;
     }
 
     SimplexMainCore::SimplexMainCore(
         Tableau& tableau,
         double epsilon,
-        double bigM
-    )
+        double bigM,
+        int max_iterations,
+        SolverStrategy solver_strategy
+    ) : SimplexMainCore(epsilon, bigM, max_iterations, solver_strategy)
     {
         this->tableau_ = tableau;
-        this->epsilon = epsilon;
-        this->bigM = bigM;
     }
 
     void SimplexMainCore::startEngine()
@@ -37,6 +44,7 @@ namespace LPEngine
             {
                 case EngineState_::PhaseII:
                     std::cout << "PhaseII" << std::endl;
+                    iteration_count_++;
                     executePivotStep();
                     next_state_ = EngineState_::TerminationCheck;
                     break;
@@ -47,6 +55,11 @@ namespace LPEngine
                 case EngineState_::Reading:
                     std::cout << "Reading" << std::endl;
                     executeReading();
+                    loopCondition_ = false;
+                    break;
+                case EngineState_::IterationLimit:
+                    std::cout << "IterationLimit" << std::endl;
+                    reportIterationLimit();
                     loopCondition_ = false;
                     break;
                 default:
@@ -68,6 +81,7 @@ namespace LPEngine
         degeneracy_ = false;
         alternative_sol_ = false;
         status_ = SolveStatus::NotStarted;
+        iteration_count_ = 0;
     }
 
     void SimplexMainCore::feasibleMockStartup()
@@ -251,7 +265,7 @@ namespace LPEngine
     void SimplexMainCore::checkTermination()
     {
         // Check termination is executed after every pivot step
-        std::cout << "\tTerminationCheck" << std::endl;
+        std::cout << iteration_count_ << std::endl;
         if (pivotResult == -1)
         {
             // -1 code: Unbounded problem
@@ -260,7 +274,11 @@ namespace LPEngine
         else if (pivotResult == 0)
         {
             auto test = tableau_->objectiveFunctionTest();
-            if (test == 0)
+            if (iteration_count_ == max_iterations_)
+            {
+                next_state_ = EngineState_::IterationLimit;
+            }
+            else if (test == 0)
             {
                 next_state_ = EngineState_::Reading;
             }
@@ -435,6 +453,20 @@ namespace LPEngine
             }
         }
         return variable_values;
+    }
+
+
+    void SimplexMainCore::reportIterationLimit()
+    {
+        status_ = SolveStatus::IterationLimitReached;
+        std::cout << "\tStatus: Iteration limit reached." << std::endl;
+        std::cout << "\tReason: maximum simplex iterations exceeded before convergence." << std::endl;
+        std::cout << "\tIterations: " << max_iterations_ << std::endl;
+        std::cout << "\tLast Entering Variable: ";
+        auto col_idx = tableau_->getColIdx();
+        auto var_name = tableau_->getVarName(col_idx);
+        std::cout << var_name << std::endl;
+        std::cout << "\tPossible cause: cycling or numerical degeneracy." << std::endl;
     }
 
 }

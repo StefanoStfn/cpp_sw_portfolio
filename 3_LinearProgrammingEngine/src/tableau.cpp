@@ -4,16 +4,18 @@
 
 #include <stdexcept>
 #include <algorithm>
-
 #include "../include/tableau.h"
-
 #include <numeric>
 
 
 namespace LPEngine {
-    Tableau::Tableau(double epsilon)
+    Tableau::Tableau(
+        SolverStrategy solver_strategy,
+        double epsilon
+    )
     {
         this->epsilon_ = epsilon;
+        this->solver_strategy_ = solver_strategy;
     }
 
     void Tableau::reset()
@@ -84,11 +86,23 @@ namespace LPEngine {
     int Tableau::executePivotStep()
     {
         // Find the variable with higher cost (column identification)
-        auto it = std::min_element(
-            tableau_buffer_.begin(),
-            tableau_buffer_.begin() + column_number_ - 1
-        );
-        colIdx = std::distance(tableau_buffer_.begin(), it);
+        auto end = tableau_buffer_.begin() + column_number_ - 2;
+        if (solver_strategy_ == SolverStrategy::MostNegative)
+        {
+            auto it = std::min_element(
+                tableau_buffer_.begin(),
+                end
+            );
+            colIdx = std::distance(tableau_buffer_.begin(), it);
+        }
+        else if (solver_strategy_ == SolverStrategy::BlandRule)
+        {
+            auto it = std::find_if(
+                tableau_buffer_.begin(),
+                end,
+                [this](double val){return val < -epsilon_;} );
+            colIdx = std::distance(tableau_buffer_.begin(), it);
+        }
         // Evaluate the lower Ratio bi/aij (row identification)
         getRowLowestRatio();
         if (minRatioRowIndex == -1)

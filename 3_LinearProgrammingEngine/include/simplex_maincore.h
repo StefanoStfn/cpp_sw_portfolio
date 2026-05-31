@@ -15,12 +15,16 @@ namespace LPEngine
         public:
             explicit SimplexMainCore(
                 double epsilon = 1E-6,
-                double bigM = 1E6
+                double bigM = 1E6,
+                int max_iterations = 4000,
+                SolverStrategy solver_strategy = SolverStrategy::BlandRule
             );
             explicit SimplexMainCore(
                 Tableau& tableau,
                 double epsilon = 1E-6,
-                double bigM = 1E6
+                double bigM = 1E6,
+                int max_iterations = 4000,
+                SolverStrategy solver_strategy = SolverStrategy::BlandRule
             );
             // Status Encoding
             enum class SolveStatus {
@@ -46,6 +50,7 @@ namespace LPEngine
             bool hasAlternativeSolution() const {return alternative_sol_;}
         private:
             // Variables
+            SolverStrategy solver_strategy_;
             //  State Machine
             enum class EngineState_
             {
@@ -56,7 +61,8 @@ namespace LPEngine
                 PhaseI,
                 PhaseII,
                 TerminationCheck,
-                Reading
+                Reading,
+                IterationLimit,
             };
             EngineState_ present_state_ = EngineState_::PhaseII;
             EngineState_ next_state_ = EngineState_::PhaseII;
@@ -65,6 +71,8 @@ namespace LPEngine
             bool degeneracy_ = false;
             bool alternative_sol_ = false;
             double bigM;
+            int max_iterations_;
+            int iteration_count_ = 0;
             // Tableau
             std::optional<Tableau> tableau_;
             int pivotResult = 0;
@@ -77,6 +85,7 @@ namespace LPEngine
             void printReading(std::vector<int>& basic_variables);
             bool artificialVariableCheck() const;
             void alternativeSolutionsCheck(std::vector<int>& basic_variables);
+            void reportIterationLimit();
     };
 }
 

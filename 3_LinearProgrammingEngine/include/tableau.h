@@ -14,10 +14,21 @@
 
 namespace LPEngine
 {
+    // Pivot Strategy
+    enum class SolverStrategy
+    {
+        MostNegative,
+        BlandRule
+    };
+
+
     class Tableau
     {
         public:
-            explicit Tableau(double epsilon = 1E-12);
+            explicit Tableau(
+                SolverStrategy solver_strategy = SolverStrategy::BlandRule,
+                double epsilon = 1E-12
+            );
             void reset();
             void overrideBuffer(
                 int row,
@@ -39,6 +50,8 @@ namespace LPEngine
             std::vector<int> getArtificialVariables() const {return artificial_variables_;}
             double getObjectiveFuncCoefficient(int varIdx) const;
         private:
+            // Pivot Strategy
+            SolverStrategy solver_strategy_;
             double epsilon_;
             // Tableau State Variables
             std::vector<int> basic_variables_;
