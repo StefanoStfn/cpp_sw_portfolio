@@ -25,7 +25,7 @@ namespace LPEngine
     RelationExpression operator- (const RelationExpression& lin_exp, const ColumnVector& col_vect);
     // RelationExpression against RelationExpression
     RelationExpression operator+ (const RelationExpression& lin_exp_a, const RelationExpression& lin_exp_b);
-    RelationExpression operator- (const RelationExpression& lin_exp_a, const RelationExpression& lin_exp_b);/
+    RelationExpression operator- (const RelationExpression& lin_exp_a, const RelationExpression& lin_exp_b);
     //RelationExpression operator+ (double coefficient, RelationExpression& lin_exp);
     //RelationExpression operator- (double coefficient, RelationExpression& lin_exp);
     //RelationExpression operator+ (const RelationExpression& lin_exp, double coefficient);
