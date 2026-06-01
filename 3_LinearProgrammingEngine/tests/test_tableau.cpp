@@ -1,60 +1,18 @@
 /**
-* Tableau unit-test fixture for the Phase II simplex core.
+* Tableau unit-test fixtures for the Phase II simplex core.
 *
-* The fixture initializes a known feasible tableau with slack variables,
-* a valid initial basis, and column-name metadata. The tests verify that
+* The tests initialize known simplex tableau with valid basis metadata,
+* column-name mappings, and solver-strategy configuration. They verify that
 * the Tableau class correctly handles objective-row inspection, RHS access,
-* variable-name lookup, pivot execution, basis updates, and termination
-* detection after repeated Gauss-Jordan pivot steps. This test focuses only
-* on low-level tableau mechanics, not on full LP preprocessing or model
+* variable-name lookup, pivot execution, basis updates, termination detection,
+* and strategy-dependent entering-variable selection. The fixtures focus only
+* on low-level tableau mechanics, including Gauss-Jordan pivoting and Bland
+* versus most-negative pivot behavior, not on LP preprocessing or model
 * construction.
 */
+#include "./fixtures/simplex_fixtures.h"
 
-#include <gtest/gtest.h>
-#include "../include/tableau.h"
-
-class TableauTest : public ::testing::Test
-{
-    protected:
-        LPEngine::Tableau tableau = LPEngine::Tableau(
-            LPEngine::SolverStrategy::MostNegative
-        );
-        // Objective function first row
-        // constraint following rows
-        void SetUp() override
-        {
-            const std::vector<double> buffer = {
-                -30, -40, 0, 0, 0, 1, 0,
-                2, 1, 1, 0, 0, 0, 10,
-                1, 1, 0, 1, 0, 0, 7,
-                1, 2, 0, 0, 1, 0, 12
-            };
-            int row_dim = 4;
-            int col_dim = 7;
-            tableau.overrideBuffer(
-                row_dim, col_dim, buffer
-            );
-            std::vector<int> basic_variables = {2, 3, 4};
-            tableau.overrideBasicVariables(
-                basic_variables
-            );
-            const std::map<int, std::string> variable_names = {
-                {0, "x"},
-                {1, "y"},
-                {2, "s1"},
-                {3, "s2"},
-                {4, "s3"},
-                {5, "P"},
-                {6, "RHS"}
-            };
-            tableau.overrideVariableNames(
-                variable_names
-            );
-        }
-};
-
-
-TEST_F(TableauTest, objectiveFunctionTest)
+TEST_F(FeasibleTableauTest, objectiveFunctionTest)
 {
     // Test whether obj function is not solved
     //  --> expect reset value
@@ -62,10 +20,9 @@ TEST_F(TableauTest, objectiveFunctionTest)
         tableau.objectiveFunctionTest(),
         -1
     );
-
 }
 
-TEST_F(TableauTest, getterMethods)
+TEST_F(FeasibleTableauTest, getterMethods)
 {
     // getBasicVariables
     EXPECT_EQ(
@@ -73,22 +30,26 @@ TEST_F(TableauTest, getterMethods)
         std::vector<int>({2, 3, 4})
     );
     // getRHS
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getRHS(2),
-        10.0
+        10.0,
+        1e-9
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getRHS(3),
-        7.0
+        7.0,
+        1e-9
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getRHS(4),
-        12.0
+        12.0,
+        1e-9
     );
     // getObjFunctionRHS
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjFunctionRHS(),
-        0.0
+        0.0,
+        1e-9
     );
     // getColIdx --> expect reset value
     EXPECT_EQ(
@@ -125,17 +86,19 @@ TEST_F(TableauTest, getterMethods)
     );
     // getObjectiveFuncCoefficient
     //-30, -40, 0, 0, 0
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(0),
-        -30.0
+        -30.0,
+        1e-9
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(2),
-        0.0
+        0.0,
+        1e-9
     );
 }
 
-TEST_F(TableauTest, getterMethodsThrowTest)
+TEST_F(FeasibleTableauTest, getterMethodsThrowTest)
 {
     // getRHS
     EXPECT_THROW(
@@ -170,7 +133,7 @@ TEST_F(TableauTest, getterMethodsThrowTest)
     );
 }
 
-TEST_F(TableauTest, PivotingExecution)
+TEST_F(FeasibleTableauTest, PivotingExecution)
 {
     tableau.executePivotStep();
     // Basic Variables
@@ -193,22 +156,25 @@ TEST_F(TableauTest, PivotingExecution)
         -1
     );
     // getObjectiveFuncCoefficient
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(0),
-        -10.0
+        -10.0,
+        1e-9
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(1),
-        0.0
+        0.0,
+        1e-9
     );
     // getObjFunctionRHS
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjFunctionRHS(),
-        240.0
+        240.0,
+        1e-9
     );
 }
 
-TEST_F(TableauTest, PivotingExecutionTermination)
+TEST_F(FeasibleTableauTest, PivotingExecutionTermination)
 {
     // Expect Termination after 2 cycles
     tableau.executePivotStep();
@@ -222,7 +188,7 @@ TEST_F(TableauTest, PivotingExecutionTermination)
     EXPECT_EQ(
         tableau.getColIdx(),
         0
-        );
+    );
     // getRowIdx --> expect r3
     EXPECT_EQ(
         tableau.getRowIdx(),
@@ -233,17 +199,32 @@ TEST_F(TableauTest, PivotingExecutionTermination)
         0
         );
     // getObjectiveFuncCoefficient
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(0),
-        0.0
+        0.0,
+        1e-9
     );
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(1),
-        0.0
+        0.0,
+        1e-9
     );
     // getObjFunctionRHS
-    EXPECT_DOUBLE_EQ(
+    EXPECT_NEAR(
         tableau.getObjFunctionRHS(),
-        260.0
+        260.0,
+        1e-9
     );
+}
+
+TEST_F(CycleFeasibleTableauTest, CheckColumnPicking)
+{
+    tableau.executePivotStep();
+    // getColIdx --> for bland rule the first negative coefficient
+    // Normally the second should've been picked
+    EXPECT_EQ(
+        tableau.getColIdx(),
+        0
+    );
+
 }

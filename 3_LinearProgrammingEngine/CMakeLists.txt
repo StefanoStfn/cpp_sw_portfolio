@@ -33,6 +33,19 @@ target_link_libraries(
 
 enable_testing()
 
+add_library(
+    SimplexFixtureLib
+    tests/fixtures/simplex_fixtures.h
+    tests/fixtures/simplex_fixtures.cpp
+)
+
+target_link_libraries(
+    SimplexFixtureLib
+    PUBLIC
+    SimplexLibrary
+    GTest::gtest
+)
+
 add_executable(
     GoogleTestExec
     tests/test_tableau.cpp
@@ -44,7 +57,9 @@ target_link_libraries(
     PRIVATE
     GTest::gtest_main
     SimplexLibrary
+    SimplexFixtureLib
 )
 
 include(GoogleTest)
 gtest_discover_tests(GoogleTestExec)
+

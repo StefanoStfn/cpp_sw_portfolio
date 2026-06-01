@@ -21,7 +21,6 @@ namespace LPEngine
         BlandRule
     };
 
-
     class Tableau
     {
         public:

@@ -21,7 +21,6 @@ namespace LPEngine
         this->max_iterations_ = max_iterations;
         this->solver_strategy_ = solver_strategy;
     }
-
     SimplexMainCore::SimplexMainCore(
         Tableau& tableau,
         double epsilon,
@@ -43,13 +42,11 @@ namespace LPEngine
             switch (present_state_)
             {
                 case EngineState_::PhaseII:
-                    std::cout << "PhaseII" << std::endl;
                     iteration_count_++;
                     executePivotStep();
                     next_state_ = EngineState_::TerminationCheck;
                     break;
                 case EngineState_::TerminationCheck:
-                    std::cout << "TerminationCheck" << std::endl;
                     checkTermination();
                     break;
                 case EngineState_::Reading:
@@ -84,178 +81,10 @@ namespace LPEngine
         iteration_count_ = 0;
     }
 
-    void SimplexMainCore::feasibleMockStartup()
-    {
-        // Objective function first row
-        // constraint following rows
-        const std::vector<double> buffer = {
-            -10, 57, 9, 24, 0, 0, 0, 1, 0,
-            0.5, -5.5, -2.5, 9, 1, 0, 0, 0, 0,
-            0.5, -1.5, -0.5, 1, 0, 1, 0, 0, 0,
-            1, 0, 0, 0, 0, 0, 1, 0, 1
-        };
-        constexpr int row_dim = 4;
-        constexpr int col_dim = 9;
-        tableau_.emplace();
-        tableau_->overrideBuffer(
-            row_dim, col_dim, buffer
-        );
-        std::vector<int> basic_variables = {4, 5, 6};
-        tableau_->overrideBasicVariables(
-            basic_variables
-        );
-        const std::map<int, std::string> variable_names = {
-            {0, "x1"},
-            {1, "x2"},
-            {2, "x3"},
-            {3, "x4"},
-            {4, "s1"},
-            {5, "s2"},
-            {6, "s3"},
-            {7, "P"},
-            {8, "RHS"}
-        };
-        tableau_->overrideVariableNames(
-            variable_names
-        );
-    }
-
-    void SimplexMainCore::unboundedMockStartup()
-    {
-        // Objective function first row
-        // constraint following rows
-        const std::vector<double> buffer = {
-            -3, -4, 0, 0, 1, 0,
-            1, -1, 1, 0, 0, 1,
-            -2, 1, 0, 1, 0, 2
-        };
-        constexpr int row_dim = 3;
-        constexpr int col_dim = 6;
-        tableau_.emplace();
-        tableau_->overrideBuffer(
-            row_dim, col_dim, buffer
-            );
-        std::vector<int> basic_variables = {2, 3};
-        tableau_->overrideBasicVariables(
-            basic_variables
-        );
-        const std::map<int, std::string> variable_names = {
-            {0, "x1"},
-            {1, "x2"},
-            {2, "s1"},
-            {3, "s2"},
-            {4, "P"},
-            {5, "RHS"}
-        };
-        tableau_->overrideVariableNames(
-            variable_names
-        );
-    }
-
-    void SimplexMainCore::unfeasibleMockStartup()
-    {
-        // Objective function first row
-        // constraint following rows
-        const std::vector<double> buffer = {
-            -1 - bigM, -2 - bigM, -3 - bigM, bigM, 0, 0, 1, -10 * bigM,
-            1, 1, 1, -1, 0, 1, 0, 10,
-            1, 1, 1, 0, 1, 0, 0, 5
-        };
-        constexpr int row_dim = 3;
-        constexpr int col_dim = 8;
-        tableau_.emplace();
-        tableau_->overrideBuffer(
-            row_dim, col_dim, buffer
-        );
-        std::vector<int> basic_variables = {5, 4};
-        tableau_->overrideBasicVariables(
-            basic_variables
-        );
-        const std::map<int, std::string> variable_names = {
-            {0, "x1"},
-            {1, "x2"},
-            {2, "x3"},
-            {3, "s1"},
-            {4, "s2"},
-            {5, "a1"},
-            {6, "P"},
-            {7, "RHS"}
-        };
-        tableau_->overrideVariableNames(
-            variable_names
-        );
-        std::vector<int> artificial_vars = {5};
-        tableau_->overrideArtificialVariables(artificial_vars);
-    }
-
-    void SimplexMainCore::degeneracyMockStartup()
-    {
-        // Objective function first row
-        // constraint following rows
-        const std::vector<double> buffer = {
-            -6, -2, 0, 0, 1, 0,
-            5, 2, 1, 0, 0, 10,
-            2, 1, 0, 1, 0, 4
-        };
-        constexpr int row_dim = 3;
-        constexpr int col_dim = 6;
-        tableau_.emplace();
-        tableau_->overrideBuffer(
-            row_dim, col_dim, buffer
-        );
-        std::vector<int> basic_variables = {2, 3};
-        tableau_->overrideBasicVariables(
-            basic_variables
-        );
-        const std::map<int, std::string> variable_names = {
-            {0, "x1"},
-            {1, "x2"},
-            {2, "s1"},
-            {3, "s2"},
-            {4, "P"},
-            {5, "RHS"}
-        };
-        tableau_->overrideVariableNames(
-            variable_names
-        );
-    }
-
-    void SimplexMainCore::alternativeOptSolMockStartup()
-    {
-        // Objective function first row
-        // constraint following rows
-        const std::vector<double> buffer = {
-            -4, -2, 0, 0, 1, 0,
-            2, 5, 1, 0, 0, 10,
-            2, 1, 0, 1, 0, 4
-        };
-        constexpr int row_dim = 3;
-        constexpr int col_dim = 6;
-        tableau_.emplace();
-        tableau_->overrideBuffer(
-            row_dim, col_dim, buffer
-        );
-        std::vector<int> basic_variables = {2, 3};
-        tableau_->overrideBasicVariables(
-            basic_variables
-        );
-        const std::map<int, std::string> variable_names = {
-            {0, "x1"},
-            {1, "x2"},
-            {2, "s1"},
-            {3, "s2"},
-            {4, "P"},
-            {5, "RHS"}
-        };
-        tableau_->overrideVariableNames(
-            variable_names
-        );
-    }
 
     void SimplexMainCore::executePivotStep()
     {
         // Call the Tableau Pivot Step
-        std::cout << "\tPivot Step" << std::endl;
         pivotResult = tableau_->executePivotStep();
         next_state_ = EngineState_::TerminationCheck;
     }
@@ -265,7 +94,6 @@ namespace LPEngine
     void SimplexMainCore::checkTermination()
     {
         // Check termination is executed after every pivot step
-        std::cout << iteration_count_ << std::endl;
         if (pivotResult == -1)
         {
             // -1 code: Unbounded problem

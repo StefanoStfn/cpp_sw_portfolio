@@ -2,74 +2,162 @@
 // Created by Martina on 31/05/2026.
 //
 #include <gtest/gtest.h>
+#include "./fixtures/simplex_fixtures.h"
 #include "../include/simplex_maincore.h"
 
-class FeasibleTableauTest : public ::testing::Test
+TEST_F(FeasibleTableauTest, ExecutionTest)
 {
-    protected:
-        LPEngine::Tableau feasible_tableau;
-        LPEngine::Tableau beale_cycle_feasible_tableau;
-        // Objective function first row
-        // constraint following rows
-        void SetUp() override
-        {
-            // Basic Feasible Example
-            const std::vector<double> buffer = {
-                -30, -40, 0, 0, 0, 1, 0,
-                2, 1, 1, 0, 0, 0, 10,
-                1, 1, 0, 1, 0, 0, 7,
-                1, 2, 0, 0, 1, 0, 12
-            };
-            int row_dim = 4;
-            int col_dim = 7;
-            feasible_tableau.overrideBuffer(
-                row_dim, col_dim, buffer
-            );
-            std::vector<int> basic_variables = {2, 3, 4};
-            feasible_tableau.overrideBasicVariables(
-                basic_variables
-            );
-            const std::map<int, std::string> variable_names = {
-                {0, "x"},
-                {1, "y"},
-                {2, "s1"},
-                {3, "s2"},
-                {4, "s3"},
-                {5, "P"},
-                {6, "RHS"}
-            };
-            feasible_tableau.overrideVariableNames(
-                variable_names
-            );
-            // Beale cycling example
-            const std::vector<double> bc_buffer = {
-                -10, 57, 9, 24, 0, 0, 0, 1, 0,
-                0.5, -5.5, -2.5, 9, 1, 0, 0, 0, 0,
-                0.5, -1.5, -0.5, 1, 0, 1, 0, 0, 0,
-                1, 0, 0, 0, 0, 0, 1, 0, 1
-            };
-            int bc_row_dim = 4;
-            int bc_col_dim = 9;
-            beale_cycle_feasible_tableau.overrideBuffer(
-                bc_row_dim, bc_col_dim, bc_buffer
-            );
-            std::vector<int> bc_basic_variables = {4, 5, 6};
-            beale_cycle_feasible_tableau.overrideBasicVariables(
-                bc_basic_variables
-            );
-            const std::map<int, std::string> bc_variable_names = {
-                {0, "x1"},
-                {1, "x2"},
-                {2, "x3"},
-                {3, "x4"},
-                {4, "s1"},
-                {5, "s2"},
-                {6, "s3"},
-                {7, "P"},
-                {8, "RHS"}
-            };
-            beale_cycle_feasible_tableau.overrideVariableNames(
-                bc_variable_names
-            );
-        }
-};
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Optimal
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+    // Check internal expected variables
+    EXPECT_NEAR(
+        simplex_engine.getOptimaSolutionRHS(),
+        260.0,
+        1e-9
+    );
+    const auto values = simplex_engine.getVariableValues();
+    EXPECT_NEAR(values.at("x"), 2.0, 1e-9);
+    EXPECT_NEAR(values.at("y"), 5.0, 1e-9);
+    EXPECT_NEAR(values.at("s1"), 1.0, 1e-9);
+}
+
+TEST_F(FractionalValueTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Optimal
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+    // Check internal expected variables
+    EXPECT_NEAR(
+        simplex_engine.getOptimaSolutionRHS(),
+        8.4,
+        1e-9
+    );
+    const auto values = simplex_engine.getVariableValues();
+    EXPECT_NEAR(values.at("x"), 1.6, 1e-9);
+    EXPECT_NEAR(values.at("y"), 1.8, 1e-9);
+
+}
+
+TEST_F(CycleFeasibleTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Optimal
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+    // Check internal expected variables
+    EXPECT_NEAR(
+        simplex_engine.getOptimaSolutionRHS(),
+        1.0,
+        1e-9
+    );
+    const auto values = simplex_engine.getVariableValues();
+    EXPECT_NEAR(values.at("x1"), 1.0, 1e-9);
+    EXPECT_NEAR(values.at("x2"), 0.0, 1e-9);
+    EXPECT_NEAR(values.at("x3"), 1.0, 1e-9);
+    EXPECT_NEAR(values.at("s1"), 2.0, 1e-9);
+}
+
+TEST_F(IterationLimitTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::IterationLimitReached
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+}
+
+TEST_F(UnboundedTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Unbounded
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+}
+
+TEST_F(InfeasibleTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Infeasible
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+    // Check internal expected variables
+    const auto values = simplex_engine.getVariableValues();
+    EXPECT_NEAR(values.at("a1"), 5.0, 1e-9);
+}
+
+TEST_F(DegeneracyTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Optimal
+    );
+    EXPECT_TRUE(simplex_engine.isDegenerateSolution());
+    EXPECT_FALSE(simplex_engine.isAlternativeSolution());
+    // Check internal expected variables
+    EXPECT_NEAR(
+        simplex_engine.getOptimaSolutionRHS(),
+        12.0,
+        1e-9
+    );
+    const auto values = simplex_engine.getVariableValues();
+    EXPECT_NEAR(values.at("x1"), 2.0, 1e-9);
+    EXPECT_NEAR(values.at("x2"), 0.0, 1e-9);
+    EXPECT_NEAR(values.at("s1"), 0.0, 1e-9);
+}
+
+TEST_F(AlternativeOptSolTableauTest, ExecutionTest)
+{
+    auto simplex_engine = LPEngine::SimplexMainCore(tableau);
+    simplex_engine.startEngine();
+    // Check Flags
+    EXPECT_EQ(
+        simplex_engine.getStatus(),
+        LPEngine::SimplexMainCore::SolveStatus::Optimal
+    );
+    EXPECT_FALSE(simplex_engine.isDegenerateSolution());
+    EXPECT_TRUE(simplex_engine.isAlternativeSolution());
+    // Check internal expected variables
+    EXPECT_NEAR(
+        simplex_engine.getOptimaSolutionRHS(),
+        8.0,
+        1e-9
+    );
+    const auto values = simplex_engine.getVariableValues();
+    EXPECT_NEAR(values.at("x1"), 2.0, 1e-9);
+    EXPECT_NEAR(values.at("x2"), 0.0, 1e-9);
+}

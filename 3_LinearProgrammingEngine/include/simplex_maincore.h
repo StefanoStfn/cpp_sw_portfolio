@@ -35,19 +35,14 @@ namespace LPEngine
                 IterationLimitReached
             };
             // Utility methods
-            void feasibleMockStartup();
-            void unboundedMockStartup();
-            void unfeasibleMockStartup();
-            void degeneracyMockStartup();
-            void alternativeOptSolMockStartup();
             void resetEngine();
             void startEngine();
             // public API exposed to Python Bindings
             SolveStatus getStatus() const { return status_;}
             double getOptimaSolutionRHS() const;
             std::map<std::string,double> getVariableValues();
-            bool hasDegenerateSolution() const {return degeneracy_;}
-            bool hasAlternativeSolution() const {return alternative_sol_;}
+            bool isDegenerateSolution() const {return degeneracy_;}
+            bool isAlternativeSolution() const {return alternative_sol_;}
         private:
             // Variables
             SolverStrategy solver_strategy_;
