@@ -17,9 +17,10 @@
 #include "../include/tableau.h"
 #include <numeric>
 
-namespace LPEngine {
+namespace LPEngine
+{
     Tableau::Tableau(
-        SolverStrategy solver_strategy,
+        SimplexStrategy solver_strategy,
         double epsilon
     )
     {
@@ -96,7 +97,7 @@ namespace LPEngine {
     {
         // Find the variable with higher cost (column identification)
         auto end = tableau_buffer_.begin() + column_number_ - 2;
-        if (solver_strategy_ == SolverStrategy::MostNegative)
+        if (solver_strategy_ == SimplexStrategy::MostNegative)
         {
             auto it = std::min_element(
                 tableau_buffer_.begin(),
@@ -104,7 +105,7 @@ namespace LPEngine {
             );
             colIdx = std::distance(tableau_buffer_.begin(), it);
         }
-        else if (solver_strategy_ == SolverStrategy::BlandRule)
+        else if (solver_strategy_ == SimplexStrategy::BlandRule)
         {
             auto it = std::find_if(
                 tableau_buffer_.begin(),

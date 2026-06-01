@@ -26,14 +26,14 @@ namespace LPEngine
                 double epsilon = 1E-6,
                 double bigM = 1E6,
                 int max_iterations = 4000,
-                SolverStrategy solver_strategy = SolverStrategy::BlandRule
+                SimplexStrategy solver_strategy = SimplexStrategy::BlandRule
             );
             explicit SimplexMainCore(
                 Tableau& tableau,
                 double epsilon = 1E-6,
                 double bigM = 1E6,
                 int max_iterations = 4000,
-                SolverStrategy solver_strategy = SolverStrategy::BlandRule
+                SimplexStrategy solver_strategy = SimplexStrategy::BlandRule
             );
             // Status Encoding
             enum class SolveStatus {
@@ -54,7 +54,7 @@ namespace LPEngine
             bool isAlternativeSolution() const {return alternative_sol_;}
         private:
             // Variables
-            SolverStrategy solver_strategy_;
+            SimplexStrategy solver_strategy_;
             //  State Machine
             enum class EngineState_
             {

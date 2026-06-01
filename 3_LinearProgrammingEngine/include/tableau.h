@@ -23,7 +23,7 @@
 namespace LPEngine
 {
     // Pivot Strategy
-    enum class SolverStrategy
+    enum class SimplexStrategy
     {
         MostNegative,
         BlandRule
@@ -33,7 +33,7 @@ namespace LPEngine
     {
         public:
             explicit Tableau(
-                SolverStrategy solver_strategy = SolverStrategy::BlandRule,
+                SimplexStrategy solver_strategy = SimplexStrategy::BlandRule,
                 double epsilon = 1E-12
             );
             void reset();
@@ -58,7 +58,7 @@ namespace LPEngine
             double getObjectiveFuncCoefficient(int varIdx) const;
         private:
             // Pivot Strategy
-            SolverStrategy solver_strategy_;
+            SimplexStrategy solver_strategy_;
             double epsilon_;
             // Tableau State Variables
             std::vector<int> basic_variables_;

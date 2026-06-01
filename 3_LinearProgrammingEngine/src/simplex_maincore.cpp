@@ -18,7 +18,7 @@ namespace LPEngine
         double epsilon,
         double bigM,
         int max_iterations,
-        SolverStrategy solver_strategy
+        SimplexStrategy solver_strategy
     )
     {
         this->epsilon = epsilon;
@@ -31,7 +31,7 @@ namespace LPEngine
         double epsilon,
         double bigM,
         int max_iterations,
-        SolverStrategy solver_strategy
+        SimplexStrategy solver_strategy
     ) : SimplexMainCore(epsilon, bigM, max_iterations, solver_strategy)
     {
         this->tableau_ = tableau;

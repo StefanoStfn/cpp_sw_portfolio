@@ -19,16 +19,22 @@ add_executable(
 )
 
 add_library(
-    SimplexLibrary
+    SolverLibrary
     src/simplex_maincore.cpp
     include/simplex_maincore.h
     src/tableau.cpp
     include/tableau.h
+    src/column_vector.cpp
+    include/column_vector.h
+    src/lp_solver.cpp
+    include/lp_solver.h
+    src/relation_expression.cpp
+    include/relation_expression.h
 )
 
 target_link_libraries(
     3_LinearProgrammingEngine
-    PRIVATE SimplexLibrary
+    PRIVATE SolverLibrary
 )
 
 enable_testing()
@@ -42,7 +48,7 @@ add_library(
 target_link_libraries(
     SimplexFixtureLib
     PUBLIC
-    SimplexLibrary
+    SolverLibrary
     GTest::gtest
 )
 
@@ -56,7 +62,7 @@ target_link_libraries(
     GoogleTestExec
     PRIVATE
     GTest::gtest_main
-    SimplexLibrary
+    SolverLibrary
     SimplexFixtureLib
 )
 
