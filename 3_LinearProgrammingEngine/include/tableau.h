@@ -1,6 +1,14 @@
-//
-// Created by Martina on 27/05/2026.
-//
+/**
+* Tableau representation and pivot engine for the simplex solver.
+*
+* The Tableau class owns the flattened row-major simplex tableau, basis
+* metadata, variable-name mapping, artificial-variable tracking, and pivot
+* strategy configuration. It provides the low-level operations required by
+* the simplex core: objective-row inspection, entering/leaving variable
+* selection, ratio testing, Gauss-Jordan pivot execution, basis updates, and
+* RHS/objective-value access. This class does not build an LP from user input;
+* it assumes the tableau has already been constructed by an external layer.
+*/
 
 #ifndef INC_3_LINEARPROGRAMMINGENGINE_TABLEAU_H
 #define INC_3_LINEARPROGRAMMINGENGINE_TABLEAU_H
@@ -29,14 +37,14 @@ namespace LPEngine
                 double epsilon = 1E-12
             );
             void reset();
-            void overrideBuffer(
+            void setBuffer(
                 int row,
                 int column,
                 const std::vector<double> &buffer
             );
-            void overrideBasicVariables(const std::vector<int> &basic_v);
-            void overrideVariableNames(const std::map<int, std::string>& v_names);
-            void overrideArtificialVariables(const std::vector<int>& artificial_variables);
+            void setBasicVariables(const std::vector<int> &basic_v);
+            void setVariableNames(const std::map<int, std::string>& v_names);
+            void setArtificialVariables(const std::vector<int>& artificial_variables);
             int executePivotStep();
             int objectiveFunctionTest() const;
             const std::vector<int>& getBasicVariables() const {return basic_variables_;}

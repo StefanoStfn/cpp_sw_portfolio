@@ -24,11 +24,11 @@ void FeasibleTableauTest::SetUp()
     };
     int row_dim = 4;
     int col_dim = 7;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {2, 3, 4};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -40,7 +40,7 @@ void FeasibleTableauTest::SetUp()
         {5, "P"},
         {6, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 }
@@ -56,11 +56,11 @@ void FractionalValueTableauTest::SetUp()
     };
     int row_dim = 3;
     int col_dim = 6;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {2, 3};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -71,7 +71,7 @@ void FractionalValueTableauTest::SetUp()
         {4, "P"},
         {5, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 }
@@ -88,11 +88,11 @@ void CycleFeasibleTableauTest::SetUp()
     };
     int row_dim = 4;
     int col_dim = 9;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {4, 5, 6};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -106,7 +106,7 @@ void CycleFeasibleTableauTest::SetUp()
         {7, "P"},
         {8, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 }
@@ -123,11 +123,11 @@ void IterationLimitTableauTest::SetUp()
     };
     int row_dim = 4;
     int col_dim = 9;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {4, 5, 6};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -141,7 +141,7 @@ void IterationLimitTableauTest::SetUp()
         {7, "P"},
         {8, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 }
@@ -157,11 +157,11 @@ void UnboundedTableauTest::SetUp()
     };
     constexpr int row_dim = 3;
     constexpr int col_dim = 6;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {2, 3};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -172,7 +172,7 @@ void UnboundedTableauTest::SetUp()
         {4, "P"},
         {5, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 };
@@ -188,11 +188,11 @@ void InfeasibleTableauTest::SetUp()
     };
     constexpr int row_dim = 3;
     constexpr int col_dim = 8;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {5, 4};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -205,11 +205,11 @@ void InfeasibleTableauTest::SetUp()
         {6, "P"},
         {7, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
     std::vector<int> artificial_vars = {5};
-    tableau.overrideArtificialVariables(artificial_vars);
+    tableau.setArtificialVariables(artificial_vars);
 }
 
 void DegeneracyTableauTest::SetUp()
@@ -223,11 +223,11 @@ void DegeneracyTableauTest::SetUp()
     };
     constexpr int row_dim = 3;
     constexpr int col_dim = 6;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {2, 3};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -238,7 +238,7 @@ void DegeneracyTableauTest::SetUp()
         {4, "P"},
         {5, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 };
@@ -254,11 +254,11 @@ void AlternativeOptSolTableauTest::SetUp()
     };
     constexpr int row_dim = 3;
     constexpr int col_dim = 6;
-    tableau.overrideBuffer(
+    tableau.setBuffer(
         row_dim, col_dim, buffer
     );
     std::vector<int> basic_variables = {2, 3};
-    tableau.overrideBasicVariables(
+    tableau.setBasicVariables(
         basic_variables
     );
     const std::map<int, std::string> variable_names = {
@@ -269,7 +269,7 @@ void AlternativeOptSolTableauTest::SetUp()
         {4, "P"},
         {5, "RHS"}
     };
-    tableau.overrideVariableNames(
+    tableau.setVariableNames(
         variable_names
     );
 }

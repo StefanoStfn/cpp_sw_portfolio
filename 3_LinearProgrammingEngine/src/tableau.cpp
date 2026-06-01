@@ -1,12 +1,21 @@
-//
-// Created by Martina on 27/05/2026.
-//
+/**
+* Implementation of the simplex tableau mechanics.
+*
+* This file defines the low-level numerical operations used by the solver:
+* flattened-buffer initialization, row-major indexing, objective-row tests,
+* ratio-test based leaving-row selection, pivot-row normalization,
+* Gauss-Jordan elimination, basis updates, and variable/RHS accessors.
+* It also implements strategy-dependent entering-variable selection,
+* including most-negative reduced cost and Bland's anti-cycling rule.
+* The implementation focuses only on tableau mutation and inspection, while
+* solver orchestration and final status interpretation are handled by
+* SimplexMainCore.
+*/
 
 #include <stdexcept>
 #include <algorithm>
 #include "../include/tableau.h"
 #include <numeric>
-
 
 namespace LPEngine {
     Tableau::Tableau(
@@ -33,7 +42,7 @@ namespace LPEngine {
         minRatio = -1.0;
     }
 
-    void Tableau::overrideBuffer(const int row, const int column, const std::vector<double> &buffer)
+    void Tableau::setBuffer(const int row, const int column, const std::vector<double> &buffer)
     {
         row_number_ = row;
         column_number_ = column;
@@ -45,7 +54,7 @@ namespace LPEngine {
         }
         tableau_buffer_ = buffer;
     }
-    void Tableau::overrideBasicVariables(const std::vector<int> &basic_v)
+    void Tableau::setBasicVariables(const std::vector<int> &basic_v)
     {
         if (basic_v.size() != row_number_-1)
         {
@@ -56,7 +65,7 @@ namespace LPEngine {
         basic_variables_ = basic_v;
     }
 
-    void Tableau::overrideVariableNames(const std::map<int, std::string>& v_names)
+    void Tableau::setVariableNames(const std::map<int, std::string>& v_names)
     {
         if (v_names.size() != column_number_)
         {
@@ -67,7 +76,7 @@ namespace LPEngine {
         variable_names_ = v_names;
     }
 
-    void Tableau::overrideArtificialVariables(const std::vector<int>& artificial_variables)
+    void Tableau::setArtificialVariables(const std::vector<int>& artificial_variables)
     {
         if (artificial_variables.size() >= row_number_-1)
         {

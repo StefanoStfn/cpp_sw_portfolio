@@ -1,6 +1,15 @@
-//
-//
-//
+/**
+* Main orchestration class for the simplex-based LP engine.
+*
+* SimplexMainCore owns the solver state machine and coordinates the execution
+* flow from tableau availability through Phase II pivoting, termination checks,
+* iteration-limit handling, and final solution reading. The class stores the
+* final solve status, objective value access, variable-value extraction, and
+* solution-level flags such as degeneracy and alternative optima. It operates
+* on an already-created Tableau object; LP standardization, model parsing, and
+* tableau construction are treated as separate layers.
+*/
+
 
 #ifndef INC_3_LINEARPROGRAMMINGENGINE_SIMPLEX_MAINCORE_H
 #define INC_3_LINEARPROGRAMMINGENGINE_SIMPLEX_MAINCORE_H
@@ -37,7 +46,7 @@ namespace LPEngine
             // Utility methods
             void resetEngine();
             void startEngine();
-            // public API exposed to Python Bindings
+            // API TO EXPOSE
             SolveStatus getStatus() const { return status_;}
             double getOptimaSolutionRHS() const;
             std::map<std::string,double> getVariableValues();

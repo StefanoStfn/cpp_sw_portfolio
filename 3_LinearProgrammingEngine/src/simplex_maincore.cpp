@@ -1,14 +1,19 @@
- //
-// Created by Martina on 27/05/2026.
-//
+/**
+* Implementation of the SimplexMainCore solver orchestrator.
+*
+* This file defines the main simplex engine workflow, including the internal
+* state-machine execution, Phase II pivot dispatch, termination checks,
+* final status assignment, iteration-limit handling, and solution reading.
+* The engine operates on a prebuilt Tableau and delegates low-level pivot
+* arithmetic to the Tableau class. It also interprets final solver outcomes,
+* including optimality, unboundedness, infeasibility through artificial
+* variables, degeneracy, and alternative optimal solutions.
+*/
 
 #include "../include/simplex_maincore.h"
 
-
-
 namespace LPEngine
 {
-
     SimplexMainCore::SimplexMainCore(
         double epsilon,
         double bigM,
@@ -81,15 +86,12 @@ namespace LPEngine
         iteration_count_ = 0;
     }
 
-
     void SimplexMainCore::executePivotStep()
     {
         // Call the Tableau Pivot Step
         pivotResult = tableau_->executePivotStep();
         next_state_ = EngineState_::TerminationCheck;
     }
-
-
 
     void SimplexMainCore::checkTermination()
     {
@@ -283,7 +285,6 @@ namespace LPEngine
         return variable_values;
     }
 
-
     void SimplexMainCore::reportIterationLimit()
     {
         status_ = SolveStatus::IterationLimitReached;
@@ -296,5 +297,4 @@ namespace LPEngine
         std::cout << var_name << std::endl;
         std::cout << "\tPossible cause: cycling or numerical degeneracy." << std::endl;
     }
-
 }

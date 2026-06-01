@@ -1,6 +1,16 @@
-//
-// Created by Martina on 31/05/2026.
-//
+/**
+* SimplexMainCore integration tests.
+*
+* These tests validate the full solver workflow starting from prebuilt
+* simplex tableau. They exercise the state-machine execution path through
+* pivoting, termination checks, reading, and final status assignment. The
+* covered scenarios include feasible optimal solutions, unbounded problems,
+* infeasible Big-M tableau, degenerate optima, alternative optimal solutions,
+* cycling protection through iteration limits, and Bland-rule anti-cycling
+* behavior. These tests verify engine-level behavior and result extraction,
+* not low-level tableau arithmetic or LP preprocessing.
+*/
+
 #include <gtest/gtest.h>
 #include "./fixtures/simplex_fixtures.h"
 #include "../include/simplex_maincore.h"
@@ -48,7 +58,6 @@ TEST_F(FractionalValueTableauTest, ExecutionTest)
     const auto values = simplex_engine.getVariableValues();
     EXPECT_NEAR(values.at("x"), 1.6, 1e-9);
     EXPECT_NEAR(values.at("y"), 1.8, 1e-9);
-
 }
 
 TEST_F(CycleFeasibleTableauTest, ExecutionTest)
