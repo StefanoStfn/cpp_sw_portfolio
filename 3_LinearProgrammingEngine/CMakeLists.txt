@@ -16,6 +16,7 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     3_LinearProgrammingEngine
     src/main.cpp
+    src/relation_exp_wrapper.cpp
 )
 
 add_library(
@@ -30,6 +31,7 @@ add_library(
     include/lp_solver.h
     src/relation_expression.cpp
     include/relation_expression.h
+    include/relation_exp_wrapper.h
 )
 
 target_link_libraries(

@@ -11,7 +11,7 @@ namespace LPEngine
         this->strategy_ = strategy;
     }
 
-    void LPSolver::addVariable(const std::string& var_name)
+    ColumnVector& LPSolver::addVariable(const std::string& var_name)
     {
         bool is_present = column_name_map_.contains(
             var_name
@@ -26,18 +26,17 @@ namespace LPEngine
                 {var_name, col_id_counter}
             );
             col_id_counter++;
+            return column_vector_map_.at(col_id_counter-1);
         }
-        else
-        {
-            throw std::invalid_argument(
-                "Decision Variables cannot be added multiple times"
-            );
-        }
+        throw std::invalid_argument(
+            "Decision Variables cannot be added multiple times"
+        );
     }
 
-    void LPSolver::addConstraint()
+    void LPSolver::addConstraint(const RelationExpression& constraint)
     {
-
+        // Received constraint
+        std::cout << "Constraint is added" << std::endl;
     }
 
     void LPSolver::addObjectiveFunction()

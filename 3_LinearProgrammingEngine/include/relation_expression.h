@@ -6,22 +6,19 @@
 #define INC_3_LINEARPROGRAMMINGENGINE_RELATION_EXPRESSION_H
 
 #pragma once
+#include <iostream>
+#include "column_vector.h"
+
 
 namespace LPEngine
 {
     class RelationExpression
     {
-
+        public:
+            RelationExpression();
     };
 
-    RelationExpression operator+ (double coefficient, RelationExpression& lin_exp);
-    RelationExpression operator- (double coefficient, RelationExpression& lin_exp);
-    RelationExpression operator+ (RelationExpression& lin_exp, double coefficient);
-    RelationExpression operator- (RelationExpression& lin_exp, double coefficient);
-    // Equality-Inequality
-    RelationExpression operator>= (RelationExpression& lin_exp, double coefficient);
-    RelationExpression operator<= (RelationExpression& lin_exp, double coefficient);
-    RelationExpression operator== (RelationExpression& lin_exp, double coefficient);
+
 }
 
 

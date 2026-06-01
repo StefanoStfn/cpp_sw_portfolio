@@ -7,7 +7,7 @@
 
 #pragma once
 #include "simplex_maincore.h"
-#include "column_vector.h"
+#include "relation_exp_wrapper.h"
 
 namespace LPEngine
 {
@@ -21,8 +21,8 @@ namespace LPEngine
     {
         public:
             explicit LPSolver(SolverStrategy strategy = SolverStrategy::Simplex);
-            void addVariable(const std::string& var_name);
-            void addConstraint();
+            ColumnVector& addVariable(const std::string& var_name);
+            void addConstraint(const RelationExpression& constraint);
             void addObjectiveFunction();
             void solve();
         private:

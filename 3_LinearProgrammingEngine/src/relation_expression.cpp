@@ -6,5 +6,10 @@
 
 namespace LPEngine
 {
+    RelationExpression::RelationExpression()
+    {
+
+    }
+
 
 }

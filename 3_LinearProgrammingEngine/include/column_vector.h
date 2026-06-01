@@ -8,7 +8,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "relation_expression.h"
 
 namespace LPEngine
 {
@@ -38,24 +37,6 @@ namespace LPEngine
             std::vector<double> coefficients_;
             ColumnRole role_;
     };
-
-    // Column vector interaction with coefficient
-    RelationExpression operator* (double coefficient, ColumnVector& col_vect);
-    RelationExpression operator+ (double coefficient, ColumnVector& col_vect);
-    RelationExpression operator- (double coefficient, ColumnVector& col_vect);
-    RelationExpression operator* (ColumnVector& col_vect, double coefficient);
-    RelationExpression operator+ (ColumnVector& col_vect, double coefficient);
-    RelationExpression operator- (ColumnVector& col_vect, double coefficient);
-    // Column vector against column vector
-    RelationExpression operator+ (ColumnVector& col_vect_a, ColumnVector& col_vect_b);
-    RelationExpression operator- (ColumnVector& col_vect_a, ColumnVector& col_vect_b);
-    // Column vector against RelationExpression
-    RelationExpression operator+ (ColumnVector& col_vect, RelationExpression& lin_exp);
-    RelationExpression operator- (RelationExpression& lin_exp, ColumnVector& col_vect);
-    // Equality-Inequality
-    RelationExpression operator>= (ColumnVector& col_vect_a, double coefficient);
-    RelationExpression operator<= (ColumnVector& col_vect_a, double coefficient);
-    RelationExpression operator== (ColumnVector& col_vect_a, double coefficient);
 }
 
 #endif //INC_3_LINEARPROGRAMMINGENGINE_COLUMN_VECTOR_H
