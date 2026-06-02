@@ -157,7 +157,7 @@ TEST_F(RelationExpressionTest, ResetStatecheck)
 {
     auto expr = 3.0 * x1 + 2.0 * x2;
     const auto coeffs = expr.getCoefficients();
-    
+
     EXPECT_EQ(expr.getConstraintSense(), LPEngine::ConstraintSense::Reset);
 }
 
