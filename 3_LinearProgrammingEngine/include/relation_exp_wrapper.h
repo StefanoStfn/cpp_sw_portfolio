@@ -17,15 +17,21 @@ namespace LPEngine
     //RelationExpression operator+ (const ColumnVector& col_vect, double coefficient);
     //RelationExpression operator- (double coefficient, const ColumnVector& col_vect);
     //RelationExpression operator- (const ColumnVector& col_vect, double coefficient);
+    // unary negation
+    RelationExpression operator- (const ColumnVector& col_vect_a);
     // Column vector against column vector
     RelationExpression operator+ (const ColumnVector& col_vect_a, const ColumnVector& col_vect_b);
     RelationExpression operator- (const ColumnVector& col_vect_a, const ColumnVector& col_vect_b);
     // Column vector against RelationExpression
     RelationExpression operator+ (const ColumnVector& col_vect, const RelationExpression& lin_exp);
+    RelationExpression operator+ (const RelationExpression& lin_exp, const ColumnVector& col_vect);
+    RelationExpression operator- (const ColumnVector& col_vect, const RelationExpression& lin_exp);
     RelationExpression operator- (const RelationExpression& lin_exp, const ColumnVector& col_vect);
     // RelationExpression against RelationExpression
     RelationExpression operator+ (const RelationExpression& lin_exp_a, const RelationExpression& lin_exp_b);
     RelationExpression operator- (const RelationExpression& lin_exp_a, const RelationExpression& lin_exp_b);
+    // Unary Negation for RelationExpression
+    RelationExpression operator- (const RelationExpression& lin_exp);
     //RelationExpression operator+ (double coefficient, RelationExpression& lin_exp);
     //RelationExpression operator- (double coefficient, RelationExpression& lin_exp);
     //RelationExpression operator+ (const RelationExpression& lin_exp, double coefficient);
