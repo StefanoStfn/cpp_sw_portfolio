@@ -7,18 +7,35 @@
 
 #pragma once
 #include <iostream>
-#include "column_vector.h"
+#include <string>
+#include <map>
+#include <sstream>
+#include "decision_variable.h"
 
+#define RHS_KEY "RHS"
 
 namespace LPEngine
 {
+    enum class ConstraintSense
+    {
+        Reset,
+        Equal,
+        GreaterEqual,
+        LessEqual
+    };
+
     class RelationExpression
     {
         public:
-            RelationExpression();
+            explicit RelationExpression(const std::map<std::string, double> &coefficients);
+            const std::map<std::string, double>& getCoefficients() const {return coefficients_;}
+            void setConstraintSense(ConstraintSense constraint_sense);
+            ConstraintSense getConstraintSense() const {return constraint_sense_;};
+            std::string toString() const;
+        private:
+            std::map<std::string, double> coefficients_;
+            ConstraintSense constraint_sense_ = ConstraintSense::Reset;
     };
-
-
 }
 
 

@@ -21,7 +21,7 @@ class FeasibleTableauTest : public ::testing::Test
 {
     protected:
         LPEngine::Tableau tableau = LPEngine::Tableau(
-            LPEngine::SolverStrategy::MostNegative
+            LPEngine::SimplexStrategy::MostNegative
         );
         void SetUp() override;
 };
@@ -30,7 +30,7 @@ class FractionalValueTableauTest : public ::testing::Test
 {
     protected:
         LPEngine::Tableau tableau = LPEngine::Tableau(
-            LPEngine::SolverStrategy::MostNegative
+            LPEngine::SimplexStrategy::MostNegative
         );
         void SetUp() override;
 };
@@ -39,7 +39,7 @@ class CycleFeasibleTableauTest : public ::testing::Test
 {
     protected:
         LPEngine::Tableau tableau = LPEngine::Tableau(
-            LPEngine::SolverStrategy::BlandRule
+            LPEngine::SimplexStrategy::BlandRule
         );
         void SetUp() override;
 };
@@ -48,7 +48,7 @@ class IterationLimitTableauTest : public ::testing::Test
 {
     protected:
         LPEngine::Tableau tableau = LPEngine::Tableau(
-            LPEngine::SolverStrategy::MostNegative
+            LPEngine::SimplexStrategy::MostNegative
         );
         void SetUp() override;
 };

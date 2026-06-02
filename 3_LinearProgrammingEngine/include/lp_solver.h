@@ -21,7 +21,7 @@ namespace LPEngine
     {
         public:
             explicit LPSolver(SolverStrategy strategy = SolverStrategy::Simplex);
-            ColumnVector& addVariable(const std::string& var_name);
+            DecisionVariable& addVariable(const std::string& var_name);
             void addConstraint(const RelationExpression& constraint);
             void addObjectiveFunction();
             void solve();
@@ -29,7 +29,7 @@ namespace LPEngine
             void runSimplex();
             void runInteriorPoint();
             SolverStrategy strategy_;
-            std::map<int, ColumnVector> column_vector_map_;
+            std::vector<DecisionVariable> decision_variables_;
             std::map<std::string, int> column_name_map_;
             int col_id_counter = 0;
     };

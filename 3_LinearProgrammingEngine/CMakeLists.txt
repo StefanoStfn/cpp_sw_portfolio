@@ -16,7 +16,6 @@ FetchContent_MakeAvailable(googletest)
 add_executable(
     3_LinearProgrammingEngine
     src/main.cpp
-    src/relation_exp_wrapper.cpp
 )
 
 add_library(
@@ -25,12 +24,13 @@ add_library(
     include/simplex_maincore.h
     src/tableau.cpp
     include/tableau.h
-    src/column_vector.cpp
-    include/column_vector.h
+    src/decision_variable.cpp
+    include/decision_variable.h
     src/lp_solver.cpp
     include/lp_solver.h
     src/relation_expression.cpp
     include/relation_expression.h
+    src/relation_exp_wrapper.cpp
     include/relation_exp_wrapper.h
 )
 
@@ -58,6 +58,7 @@ add_executable(
     GoogleTestExec
     tests/test_tableau.cpp
     tests/test_simplex_maincore.cpp
+    tests/test_relation_expression_operators.cpp
 )
 
 target_link_libraries(
