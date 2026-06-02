@@ -34,6 +34,13 @@ namespace LPEngine
     void LPSolver::addConstraint(const RelationExpression& constraint)
     {
         // Received constraint
+        if (constraint.getConstraintSense() == ConstraintSense::Reset)
+        {
+            throw std::invalid_argument(
+                "Create a constraint for the linear expression using ==, <=, >=."
+            );
+        }
+        constraints_.push_back(constraint);
         std::cout << "Constraint is added" << std::endl;
     }
 

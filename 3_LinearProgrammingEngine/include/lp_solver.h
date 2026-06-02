@@ -29,6 +29,7 @@ namespace LPEngine
             void runSimplex();
             void runInteriorPoint();
             SolverStrategy strategy_;
+            std::vector<RelationExpression> constraints_;
             std::vector<DecisionVariable> decision_variables_;
             std::map<std::string, int> column_name_map_;
             int col_id_counter = 0;

@@ -153,6 +153,14 @@ TEST_F(RelationExpressionTest, LessEqualAddsRHSAndSense)
     EXPECT_EQ(expr.getConstraintSense(), LPEngine::ConstraintSense::LessEqual);
 }
 
+TEST_F(RelationExpressionTest, ResetStatecheck)
+{
+    auto expr = 3.0 * x1 + 2.0 * x2;
+    const auto coeffs = expr.getCoefficients();
+    
+    EXPECT_EQ(expr.getConstraintSense(), LPEngine::ConstraintSense::Reset);
+}
+
 TEST_F(RelationExpressionTest, EqualAddsRHSAndSense)
 {
     auto expr = x1 + x2 == 5.0;
