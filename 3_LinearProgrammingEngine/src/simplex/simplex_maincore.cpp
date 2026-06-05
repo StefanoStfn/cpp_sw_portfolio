@@ -160,10 +160,6 @@ namespace LPEngine
 
     void SimplexMainCore::executeReading()
     {
-        //  0  Optimal
-        // -1  Infeasible
-        // -2  Unbounded
-        // -3  IterationLimitReached
         std::vector<int> basic_variables = tableau_->getBasicVariables();
         if (pivotResult == -1)
         {
