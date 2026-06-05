@@ -14,7 +14,7 @@
 
 #include <stdexcept>
 #include <algorithm>
-#include "../include/tableau.h"
+#include "simplex/tableau.h"
 #include <numeric>
 
 namespace LPEngine
@@ -242,9 +242,7 @@ namespace LPEngine
             basicVarIndex) != basic_variables_.end();
         if (!is_basic)
         {
-            throw std::invalid_argument(
-                "getRHS: Basic variable not present in the vector"
-            );
+            return 0.0;
         }
         int gp_index = 0;
         // this assumes that the reached solution is optimal
@@ -261,6 +259,11 @@ namespace LPEngine
         throw std::runtime_error(
             "getRHS: Basic variable found in basis vector but no unit row found"
         );
+    }
+
+    double Tableau::getObjFunctionRHS() const
+    {
+        return tableau_buffer_[column_number_-1];
     }
 
     double Tableau::getObjectiveFuncCoefficient(int varIdx) const

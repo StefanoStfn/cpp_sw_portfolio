@@ -12,8 +12,9 @@
 */
 
 #include <gtest/gtest.h>
-#include "./fixtures/simplex_fixtures.h"
-#include "../include/simplex_maincore.h"
+#include "common/enums.h"
+#include "fixtures/simplex_fixtures.h"
+#include "simplex/simplex_maincore.h"
 
 TEST_F(FeasibleTableauTest, ExecutionTest)
 {
@@ -22,7 +23,7 @@ TEST_F(FeasibleTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Optimal
+        LPEngine::SolveStatus::Optimal
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -45,7 +46,7 @@ TEST_F(FractionalValueTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Optimal
+        LPEngine::SolveStatus::Optimal
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -67,7 +68,7 @@ TEST_F(CycleFeasibleTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Optimal
+        LPEngine::SolveStatus::Optimal
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -91,7 +92,7 @@ TEST_F(IterationLimitTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::IterationLimitReached
+        LPEngine::SolveStatus::IterationLimitReached
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -104,7 +105,7 @@ TEST_F(UnboundedTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Unbounded
+        LPEngine::SolveStatus::Unbounded
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -117,7 +118,7 @@ TEST_F(InfeasibleTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Infeasible
+        LPEngine::SolveStatus::Infeasible
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -133,7 +134,7 @@ TEST_F(DegeneracyTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Optimal
+        LPEngine::SolveStatus::Optimal
     );
     EXPECT_TRUE(simplex_engine.isDegenerateSolution());
     EXPECT_FALSE(simplex_engine.isAlternativeSolution());
@@ -156,7 +157,7 @@ TEST_F(AlternativeOptSolTableauTest, ExecutionTest)
     // Check Flags
     EXPECT_EQ(
         simplex_engine.getStatus(),
-        LPEngine::SimplexMainCore::SolveStatus::Optimal
+        LPEngine::SolveStatus::Optimal
     );
     EXPECT_FALSE(simplex_engine.isDegenerateSolution());
     EXPECT_TRUE(simplex_engine.isAlternativeSolution());

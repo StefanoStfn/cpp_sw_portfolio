@@ -35,14 +35,14 @@ namespace LPEngine
                 int max_iterations = 4000,
                 SimplexStrategy solver_strategy = SimplexStrategy::BlandRule
             );
-            // Status Encoding
-            enum class SolveStatus {
-                NotStarted,
-                Optimal,
-                Infeasible,
-                Unbounded,
-                IterationLimitReached
-            };
+            explicit SimplexMainCore(
+                Tableau& tableau,
+                OptimizationType optimization_type,
+                SimplexStrategy solver_strategy = SimplexStrategy::BlandRule,
+                double epsilon = 1E-6,
+                double bigM = 1E6,
+                int max_iterations = 4000
+            );
             // Utility methods
             void resetEngine();
             void startEngine();
@@ -53,16 +53,12 @@ namespace LPEngine
             bool isDegenerateSolution() const {return degeneracy_;}
             bool isAlternativeSolution() const {return alternative_sol_;}
         private:
+            OptimizationType optimization_type_;
             // Variables
             SimplexStrategy solver_strategy_;
             //  State Machine
             enum class EngineState_
             {
-                Reset,
-                Standardization,
-                CheckFeasibility,
-                TableauCreation,
-                PhaseI,
                 PhaseII,
                 TerminationCheck,
                 Reading,

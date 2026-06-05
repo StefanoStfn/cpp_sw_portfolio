@@ -19,16 +19,10 @@
 #include <stdexcept>
 #include <iostream>
 #include <algorithm>
+#include "common/enums.h"
 
 namespace LPEngine
 {
-    // Pivot Strategy
-    enum class SimplexStrategy
-    {
-        MostNegative,
-        BlandRule
-    };
-
     class Tableau
     {
         public:
@@ -49,7 +43,8 @@ namespace LPEngine
             int objectiveFunctionTest() const;
             const std::vector<int>& getBasicVariables() const {return basic_variables_;}
             double getRHS(int basicVarIndex) const;
-            double getObjFunctionRHS() const {return tableau_buffer_[column_number_-1];}
+            double getObjFunctionRHS() const;
+
             int getColIdx() const {return colIdx;}
             int getRowIdx() const {return minRatioRowIndex;}
             std::string getVarName(int varIdx) {return variable_names_.at(varIdx);}

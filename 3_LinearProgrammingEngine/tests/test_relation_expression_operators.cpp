@@ -10,7 +10,7 @@
 */
 
 #include <gtest/gtest.h>
-#include "../include/relation_exp_wrapper.h"
+#include "modeling/relation_exp_wrapper.h"
 
 class RelationExpressionTest : public ::testing::Test
 {

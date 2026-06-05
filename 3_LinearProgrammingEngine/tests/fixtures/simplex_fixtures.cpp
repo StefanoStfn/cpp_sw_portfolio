@@ -182,7 +182,7 @@ void InfeasibleTableauTest::SetUp()
     // Objective function first row
     // constraint following rows
     const std::vector<double> buffer = {
-        -1 - bigM, -2 - bigM, -3 - bigM, bigM, 0, 0, 1, -10 * bigM,
+        -1 - BIG_M, -2 - BIG_M, -3 - BIG_M, BIG_M, 0, 0, 1, -10 * BIG_M,
         1, 1, 1, -1, 0, 1, 0, 10,
         1, 1, 1, 0, 1, 0, 0, 5
     };

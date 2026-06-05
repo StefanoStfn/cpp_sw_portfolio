@@ -1,6 +1,13 @@
-//
-// Created by Martina on 01/06/2026.
-//
+/**
+* Algebraic operator overload declarations for LP modeling expressions.
+*
+* This header defines the frontend of the Domain Specific Language syntax used
+* to build linear expressions. It supports scalar multiplication, unary negation,
+* variable-expression addition/subtraction, expression-expression arithmetic,
+* and conversion of expressions into constraints through <=, >=, and ==.
+* These overloads allow users to write LP models in natural algebraic form,
+* such as 2*x + y <= 10 or 3*x + 4*y as an objective function.
+*/
 
 #ifndef INC_3_LINEARPROGRAMMINGENGINE_RELATION_EXP_WRAPPER_H
 #define INC_3_LINEARPROGRAMMINGENGINE_RELATION_EXP_WRAPPER_H
@@ -39,9 +46,9 @@ namespace LPEngine
     //RelationExpression operator+ (const RelationExpression& rel_exp, double coefficient);
     //RelationExpression operator- (const RelationExpression& rel_exp, double coefficient);
     // Equality-Inequality
-    RelationExpression operator>= (const DecisionVariable& d_var_a, double coefficient);
-    RelationExpression operator<= (const DecisionVariable& d_var_a, double coefficient);
-    RelationExpression operator== (const DecisionVariable& d_var_a, double coefficient);
+    RelationExpression operator>= (const DecisionVariable& d_var, double coefficient);
+    RelationExpression operator<= (const DecisionVariable& d_var, double coefficient);
+    RelationExpression operator== (const DecisionVariable& d_var, double coefficient);
     // Equality-Inequality
     RelationExpression operator>= (const RelationExpression& rel_exp, double coefficient);
     RelationExpression operator<= (const RelationExpression& rel_exp, double coefficient);

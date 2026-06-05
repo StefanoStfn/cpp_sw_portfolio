@@ -1,8 +1,16 @@
-//
-// Created by Martina on 01/06/2026.
-//
+/**
+* Algebraic operator overload implementation for LP modeling.
+*
+* This file implements the arithmetic and relational operators used by the
+* frontend DSL. Decision variables and relation expressions can be combined
+* through addition, subtraction, scalar multiplication, and unary negation to
+* create linear expressions. Constraint operators attach a RHS value and
+* constraint sense to produce <=, >=, and == relation expressions. These
+* overloads allow LP models to be written in natural mathematical syntax
+* before being compiled into tableau form.
+*/
 
-#include "../include/relation_exp_wrapper.h"
+#include "modeling/relation_exp_wrapper.h"
 
 #include <algorithm>
 
@@ -182,6 +190,57 @@ namespace LPEngine
     }
 
     // Equality-Inequality
+    RelationExpression operator>= (const DecisionVariable& d_var, double coefficient)
+    {
+        auto tmp_exp = RelationExpression(
+            std::map<std::string, double>{{d_var.getName(), 1.0}}
+            );
+        std::map<std::string, double> rel_exp_c = tmp_exp.getCoefficients();
+        if (rel_exp_c.contains(RHS_KEY))
+        {
+            throw std::invalid_argument(
+                "Interaction with multiple RHS terms."
+            );
+        }
+        tmp_exp.setCoefficient(RHS_KEY, coefficient);
+        tmp_exp.setConstraintSense(ConstraintSense::GreaterEqual);
+        return tmp_exp;
+    }
+
+    RelationExpression operator<= (const DecisionVariable& d_var, double coefficient)
+    {
+        auto tmp_exp = RelationExpression(
+            std::map<std::string, double>{{d_var.getName(), 1.0}}
+            );
+        std::map<std::string, double> rel_exp_c = tmp_exp.getCoefficients();
+        if (rel_exp_c.contains(RHS_KEY))
+        {
+            throw std::invalid_argument(
+                "Interaction with multiple RHS terms."
+            );
+        }
+        tmp_exp.setCoefficient(RHS_KEY, coefficient);
+        tmp_exp.setConstraintSense(ConstraintSense::LessEqual);
+        return tmp_exp;
+    }
+
+    RelationExpression operator== (const DecisionVariable& d_var, double coefficient)
+    {
+        auto tmp_exp = RelationExpression(
+            std::map<std::string, double>{{d_var.getName(), 1.0}}
+            );
+        std::map<std::string, double> rel_exp_c = tmp_exp.getCoefficients();
+        if (rel_exp_c.contains(RHS_KEY))
+        {
+            throw std::invalid_argument(
+                "Interaction with multiple RHS terms."
+            );
+        }
+        tmp_exp.setCoefficient(RHS_KEY, coefficient);
+        tmp_exp.setConstraintSense(ConstraintSense::Equal);
+        return tmp_exp;
+    }
+
     RelationExpression operator>= (const RelationExpression& rel_exp, double coefficient)
     {
         std::map<std::string, double> rel_exp_c = rel_exp.getCoefficients();

@@ -10,7 +10,7 @@
 * variables, degeneracy, and alternative optimal solutions.
 */
 
-#include "../include/simplex_maincore.h"
+#include "simplex/simplex_maincore.h"
 
 namespace LPEngine
 {
@@ -37,6 +37,19 @@ namespace LPEngine
         this->tableau_ = tableau;
     }
 
+    SimplexMainCore::SimplexMainCore(
+        Tableau &tableau,
+        OptimizationType optimization_type,
+        SimplexStrategy solver_strategy,
+        double epsilon,
+        double bigM,
+        int max_iterations
+    ) : SimplexMainCore(epsilon, bigM, max_iterations, solver_strategy)
+    {
+        this->tableau_ = tableau;
+        this->optimization_type_ = optimization_type;
+    }
+
     void SimplexMainCore::startEngine()
     {
         // Main State Machine
@@ -55,6 +68,7 @@ namespace LPEngine
                     checkTermination();
                     break;
                 case EngineState_::Reading:
+                    std::cout << "Execution completed!" << std::endl;
                     std::cout << "Reading" << std::endl;
                     executeReading();
                     loopCondition_ = false;
@@ -124,7 +138,14 @@ namespace LPEngine
         // Used for formatting the feasible solution printing
         std::cout << "\tStatus: Feasible Optimal Solution Reached." << std::endl;
         std::cout << "\tOptimal Solution RHS: " ;
-        std::cout << tableau_->getObjFunctionRHS() << std::endl ;
+        if (optimization_type_ == OptimizationType::Minimize)
+        {
+            std::cout << tableau_->getObjFunctionRHS()*(-1.0) << std::endl ;
+        }
+        else
+        {
+            std::cout << tableau_->getObjFunctionRHS() << std::endl ;
+        }
         printReading(basic_variables);
         if (degeneracy_)
         {

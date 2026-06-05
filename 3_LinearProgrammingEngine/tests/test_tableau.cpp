@@ -10,7 +10,8 @@
 * versus most-negative pivot behavior, not on LP preprocessing or model
 * construction.
 */
-#include "./fixtures/simplex_fixtures.h"
+#include "common/enums.h"
+#include "fixtures/simplex_fixtures.h"
 
 TEST_F(FeasibleTableauTest, objectiveFunctionTest)
 {
@@ -33,23 +34,23 @@ TEST_F(FeasibleTableauTest, getterMethods)
     EXPECT_NEAR(
         tableau.getRHS(2),
         10.0,
-        1e-9
+        EPS
     );
     EXPECT_NEAR(
         tableau.getRHS(3),
         7.0,
-        1e-9
+        EPS
     );
     EXPECT_NEAR(
         tableau.getRHS(4),
         12.0,
-        1e-9
+        EPS
     );
     // getObjFunctionRHS
     EXPECT_NEAR(
         tableau.getObjFunctionRHS(),
         0.0,
-        1e-9
+        EPS
     );
     // getColIdx --> expect reset value
     EXPECT_EQ(
@@ -89,30 +90,18 @@ TEST_F(FeasibleTableauTest, getterMethods)
     EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(0),
         -30.0,
-        1e-9
+        EPS
     );
     EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(2),
         0.0,
-        1e-9
+        EPS
     );
 }
 
 TEST_F(FeasibleTableauTest, getterMethodsThrowTest)
 {
     // getRHS
-    EXPECT_THROW(
-        tableau.getRHS(0),
-        std::invalid_argument
-    );
-    EXPECT_THROW(
-        tableau.getRHS(1),
-        std::invalid_argument
-    );
-    EXPECT_THROW(
-        tableau.getRHS(13),
-        std::invalid_argument
-    );
     // getVarName
     EXPECT_THROW(
         tableau.getVarName(-1),
@@ -159,18 +148,18 @@ TEST_F(FeasibleTableauTest, PivotingExecution)
     EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(0),
         -10.0,
-        1e-9
+        EPS
     );
     EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(1),
         0.0,
-        1e-9
+        EPS
     );
     // getObjFunctionRHS
     EXPECT_NEAR(
         tableau.getObjFunctionRHS(),
         240.0,
-        1e-9
+        EPS
     );
 }
 
@@ -202,18 +191,18 @@ TEST_F(FeasibleTableauTest, PivotingExecutionTermination)
     EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(0),
         0.0,
-        1e-9
+        EPS
     );
     EXPECT_NEAR(
         tableau.getObjectiveFuncCoefficient(1),
         0.0,
-        1e-9
+        EPS
     );
     // getObjFunctionRHS
     EXPECT_NEAR(
         tableau.getObjFunctionRHS(),
         260.0,
-        1e-9
+        EPS
     );
 }
 

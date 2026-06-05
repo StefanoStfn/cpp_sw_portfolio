@@ -14,8 +14,9 @@
 #ifndef INC_3_LINEARPROGRAMMINGENGINE_SIMPLEX_FIXTURES_H
 #define INC_3_LINEARPROGRAMMINGENGINE_SIMPLEX_FIXTURES_H
 #pragma once
+#include "common/enums.h"
 #include <gtest/gtest.h>
-#include "../../include/tableau.h"
+#include "simplex/tableau.h"
 
 class FeasibleTableauTest : public ::testing::Test
 {
@@ -64,7 +65,6 @@ class InfeasibleTableauTest : public ::testing::Test
 {
     protected:
         LPEngine::Tableau tableau;
-        double bigM = 1E6;
         void SetUp() override;
 };
 
