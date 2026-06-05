@@ -53,7 +53,7 @@ namespace LPEngine
             bool isDegenerateSolution() const {return degeneracy_;}
             bool isAlternativeSolution() const {return alternative_sol_;}
         private:
-            OptimizationType optimization_type_;
+            OptimizationType optimization_type_ = OptimizationType::Maximize;
             // Variables
             SimplexStrategy solver_strategy_;
             //  State Machine
