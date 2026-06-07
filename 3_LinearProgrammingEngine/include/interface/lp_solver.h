@@ -17,14 +17,16 @@
 #include <vector>
 #include <map>
 #include <optional>
-#include "../common/enums.h"
-#include "../modeling/decision_variable.h"
-#include "../modeling/relation_exp_wrapper.h"
-#include "../simplex/simplex_maincore.h"
-#include "../simplex/tableau_builder.h"
+#include "common/enums.h"
+#include "modeling/decision_variable.h"
+#include "modeling/relation_exp_wrapper.h"
+#include "simplex/simplex_maincore.h"
+#include "simplex/tableau_builder.h"
 
 namespace LPEngine
 {
+    inline std::string version() {return "1.0.0";};
+
     class LPSolver
     {
         public:
@@ -32,7 +34,7 @@ namespace LPEngine
             explicit LPSolver(
                 SolverStrategy strategy = SolverStrategy::Simplex,
                 SimplexStrategy solver_strategy = SimplexStrategy::BlandRule,
-                double epsilon = 1E-6,
+                double epsilon = 1E-9,
                 double bigM = 1E6,
                 int max_iterations = 4000
             );

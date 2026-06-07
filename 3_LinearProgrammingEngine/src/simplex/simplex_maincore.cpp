@@ -265,6 +265,15 @@ namespace LPEngine
 
     std::map<std::string, double> SimplexMainCore::getVariableValues()
     {
+        if (status_ == SolveStatus::NotStarted) {
+            throw std::runtime_error("Solver has not been run yet");
+        }
+        if (status_ == SolveStatus::IterationLimitReached) {
+            throw std::runtime_error("Status: IterationLimitReached, no variable allowed");
+        }
+        if (status_ == SolveStatus::Unbounded) {
+            throw std::runtime_error("Status: Unbounded, no variable allowed");
+        }
         std::map<std::string, double> variable_values;
         auto basic_variables = tableau_->getBasicVariables();
         int col_num = tableau_->getColNum();

@@ -15,7 +15,7 @@
 
 #pragma once
 #include <vector>
-#include <modeling/relation_exp_wrapper.h>
+#include "modeling/relation_exp_wrapper.h"
 #include "common/enums.h"
 
 namespace LPEngine

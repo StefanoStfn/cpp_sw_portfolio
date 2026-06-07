@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 4.2)
 project(3_LinearProgrammingEngine)
-
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Used to Disable the build of GTest
 if(DEFINED SKBUILD)
@@ -16,8 +16,17 @@ option(
     ${LP_ENGINE_BUILD_TESTS_DEFAULT}
 )
 
+include(FetchContent)
+
+FetchContent_Declare(
+    pybind11
+    URL https://github.com/pybind/pybind11/archive/refs/tags/v3.0.4.zip
+)
+
+
+FetchContent_MakeAvailable(pybind11)
+
 if(LP_ENGINE_BUILD_TESTS)
-    include(FetchContent)
 
     FetchContent_Declare(
         googletest
@@ -66,6 +75,29 @@ set_target_properties(
     PROPERTIES
     POSITION_INDEPENDENT_CODE ON
 )
+
+
+pybind11_add_module(
+    lpengine
+    src/interface/bindings.cpp)
+
+target_link_libraries(
+    lpengine
+    PRIVATE
+    SolverLibrary
+)
+
+install(
+    TARGETS lpengine
+    LIBRARY DESTINATION .
+    RUNTIME DESTINATION .
+)
+install(
+    FILES
+    python/lpengine.pyi
+    DESTINATION .
+)
+
 if(LP_ENGINE_BUILD_TESTS)
     enable_testing()
 
@@ -102,3 +134,7 @@ if(LP_ENGINE_BUILD_TESTS)
     include(GoogleTest)
     gtest_discover_tests(GoogleTestExec)
 endif()
+
+
+
+
