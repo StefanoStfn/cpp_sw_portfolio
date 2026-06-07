@@ -220,7 +220,10 @@ explicit variable bounds other than x >= 0
 ## Project Structure
 
 ```text
-3_LinearProgrammingEngine/
+## Project Structure
+
+```text
+2_LinearProgrammingEngine/
 ├── include/
 │   ├── common/
 │   ├── interface/
@@ -232,12 +235,18 @@ explicit variable bounds other than x >= 0
 │   └── simplex/
 ├── tests/
 │   ├── fixtures/
+│   ├── system_test.cpp
 │   ├── test_lp_frontend.cpp
-│   └── system_test.cpp
+│   ├── test_relation_expression_operators.cpp
+│   ├── test_simplex_maincore.cpp
+│   └── test_tableau.cpp
 ├── python/
+│   ├── python_tests/
 │   └── lpengine.pyi
 ├── CMakeLists.txt
-└── pyproject.toml
+├── LICENSE
+├── pyproject.toml
+└── README.md
 ```
 
 ## Version
