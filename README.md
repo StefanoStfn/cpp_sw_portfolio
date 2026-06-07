@@ -30,12 +30,12 @@ C++ graph exploration with shortest-path scanner project.
 ### Structure
 
 0_graph_explorer/
-├── include/
-├── src/
-├── tests/
-├── images/
-├── CMakeLists.txt
-└── README.md
+├── include/  
+├── src/  
+├── tests/  
+├── images/  
+├── CMakeLists.txt  
+└── README.md  
 
 
 ### Folder Purpose
@@ -63,14 +63,14 @@ C++ multidimensional array (Tensor) library with Python bindings.
 ### Structure
 
 1_NumToy/
-├── include/
-├── src/
-├── tests/
-├── python_tests/
-├── CMakeLists.txt
-├── pyproject.toml
-├── LICENSE
-└── README.md
+├── include/  
+├── src/  
+├── tests/  
+├── python_tests/  
+├── CMakeLists.txt  
+├── pyproject.toml  
+├── LICENSE  
+└── README.md  
 
 ### Folder Purpose
 
@@ -92,5 +92,42 @@ C++ multidimensional array (Tensor) library with Python bindings.
 ```
 ---  
 
+```md
+## 2 Linear Programming Engine
 
+C++ Linear Programming Engine solver with Python bindings and interface definition.
 
+### Structure
+
+2_LinearProgrammingEngine/  
+├── include/  
+├── src/  
+├── tests/ 
+├── python/  
+├── CMakeLists.txt  
+├── pyproject.toml  
+├── LICENSE  
+└── README.md  
+
+### Folder Purpose
+
+* `include/` → solver interface, modeling API, enums and simplex/tableau declarations
+* `src/` → C++ implementation, Simplex core, Big-M tableau builder and pybind11 bindings
+* `tests/` → GoogleTest validation suite for the C++ backend and system behavior
+* `python/` → Python stub file for autocomplete and type hints and tests
+* `pyproject.toml` → pip/scikit-build-core packaging configuration
+
+### Highlights
+
+* Continuous Linear Programming engine for non-negative decision variables
+* Simplex backend with Bland Rule and Most Negative pivot strategies
+* Big-M support for `>=` and `==` constraints through artificial variables
+* Support for maximization and minimization problems
+* Detection of optimal, infeasible, unbounded, degenerate and alternative-optimum cases
+* Algebraic Python DSL for expressions such as `2*x + y <= 10`
+* Python bindings with pybind11 exposing solver API, enums, operators and result accessors
+* Python `.pyi` interface file for autocomplete and type hints
+* Pip-installable package using CMake and scikit-build-core
+
+```
+---  

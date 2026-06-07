@@ -179,6 +179,23 @@ The test suite covers:
 - degenerate solutions
 - alternative optimal solutions
 
+## Python Interface Tests
+
+A small Python `unittest` suite validates the public binding layer. These tests are intentionally lightweight: the C++ test suite verifies the solver internals, while the Python tests check that the installed module can be imported, the algebraic DSL works, enum aliases are exposed correctly, and results can be read through the public API.
+
+Covered Python cases:
+
+- classic feasible maximization
+- minimization with Big-M
+- unbounded problem detection
+- infeasible problem detection
+
+Run with:
+
+```bash
+python -m unittest tests/test_python_interface.py
+```
+
 ## Current Scope
 
 Supported:
