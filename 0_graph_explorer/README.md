@@ -240,7 +240,7 @@ This result can be quickened up for sure enabling the release build in the IDE.
 In addition to that, I know for sure that C++ can deliver faster results and one of the problem here is memory layout.  
 I implemented the adjacency list using a nested data structure, pure OOP like. But that is inefficient and not exactly cache friendly.  
 
-#### Solution: store the adjacency list in a contigous memory manner.
+#### Solution: store the adjacency list in a contiguous memory manner.
 
 The following result speaks alone. Of course there was a huge benefit thanks to the Compiler Optimization, at high node values (5000) the execution time is about 40% reduced.
 But the big stake is thanks to the different memory layout (the flat one). which reduces by 97% the execution time.
