@@ -242,10 +242,10 @@ I implemented the adjacency list using a nested data structure, pure OOP like. B
 
 #### Solution: store the adjacency list in a contigous memory manner.
 
-![Flat vs Nested Benchmark](./images/exec_time_benchmark_flat_vs_nested.png)
-
 The following result speaks alone. Of course there was a huge benefit thanks to the Compiler Optimization, at high node values (5000) the execution time is about 40% reduced.
 But the big stake is thanks to the different memory layout (the flat one). which reduces by 97% the execution time.
+
+![Flat vs Nested Benchmark](./images/exec_time_benchmark_flat_vs_nested.png)
 
 #### Selected values:
 
