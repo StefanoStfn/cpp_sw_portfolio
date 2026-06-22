@@ -1,27 +1,30 @@
 //
-// Graph implementation, implement constructor, neighbors getter and dijkstra
+// Created by Martina on 22/06/2026.
 //
 
-#include "../include/graph.h"
+#include "../include/graph_flat.h"
 
-graph::graph(int** adjacency_matrix, const int& node_number)
+
+GraphFlat::GraphFlat(int** adjacency_matrix, const int& node_number)
 {
+    this->node_number = node_number;
+    offsets.push_back(0);
     for (int i = 0; i < node_number; i++)
     {
-        this->nodes_vect.push_back(
-            node(adjacency_matrix[i], i, node_number)
-        );
+        offsets.push_back(0);
+        for (int j = 0; j < node_number; j++)
+        {
+            if (adjacency_matrix[i][j] > 0)
+            {
+                edge_targets.push_back(j);
+                edge_weights.push_back(adjacency_matrix[i][j]);
+            }
+        }
+        offsets[i+1] = edge_targets.size();
     }
-    this->node_number = node_number;
 }
 
-const std::vector<edge>& graph::get_neighbours (const int& node_index) const
-{
-    return nodes_vect[node_index].get_edge_vect();
-}
-
-
-std::pair<std::vector<int>, int> graph::lazy_dijkstra(
+std::pair<std::vector<int>, int> GraphFlat::lazy_dijkstra(
     const int& start_node,
     const int& end_node
 ) const
@@ -47,16 +50,18 @@ std::pair<std::vector<int>, int> graph::lazy_dijkstra(
     );
     while (!pq_id_dist.empty())
     {
-        int index = pq_id_dist.top().second;
+        const int index = pq_id_dist.top().second;
         const int min_dist = pq_id_dist.top().first;
         pq_id_dist.pop();
+        // new logic
         if (dist_vect[index] >= min_dist)
         {
-            std::vector<edge> n_vect = get_neighbours(index);
-            for (const auto& e : n_vect)
+            const int start_id = offsets[index];
+            const int end_id = offsets[index+1];
+            for (int i = start_id; i < end_id; ++i)
             {
-                int n_index = e.get_node_id();
-                int new_dist = dist_vect[index] + e.get_weight();
+                int n_index = edge_targets[i];
+                int new_dist = dist_vect[index] + edge_weights[i];
                 if (new_dist < dist_vect[n_index])
                 {
                     path_vect[n_index] = index;

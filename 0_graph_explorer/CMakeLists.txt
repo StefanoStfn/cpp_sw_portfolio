@@ -18,6 +18,8 @@ add_library(
     src/graph.cpp
     src/node.cpp
     src/edge.cpp
+    src/graph_flat.cpp
+    include/graph_flat.h
 )
 
 target_include_directories(
@@ -42,6 +44,7 @@ add_executable(
     tests/test_edge.cpp
     tests/test_node.cpp
     tests/test_graph.cpp
+    tests/test_flat_graph.cpp
 )
 
 target_link_libraries(
@@ -52,3 +55,36 @@ target_link_libraries(
 
 include(GoogleTest)
 gtest_discover_tests(graph_explorer_tests)
+
+
+#if(CMAKE_BUILD_TYPE STREQUAL "Release")
+#    target_compile_options(graph_explorer_lib PRIVATE
+#        -O3
+#        -march=native
+#        #-flto
+#        -funroll-loops
+#    )
+#    target_compile_options(graph_explorer PRIVATE
+#        -O3
+#        -march=native
+#        #-flto
+#        -funroll-loops
+#    )
+#    #target_link_options(graph_explorer PRIVATE -flto)
+#endif()
+
+if(CMAKE_BUILD_TYPE STREQUAL "Release")
+    target_compile_options(graph_explorer_lib PRIVATE
+        /O2
+        /GL
+        /arch:AVX2
+        /fp:fast
+    )
+    target_compile_options(graph_explorer PRIVATE
+        /O2
+        /GL
+        /arch:AVX2
+        /fp:fast
+    )
+    target_link_options(graph_explorer PRIVATE /LTCG)
+endif()

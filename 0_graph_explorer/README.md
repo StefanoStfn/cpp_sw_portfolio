@@ -4,6 +4,7 @@ C++ graph exploration with shortest-path-scanner project focused on:
 
 * scalable graph data structures
 * adjacency matrix to adjacency list conversion
+* cache-aware flat adjacency list representation
 * Lazy Dijkstra shortest-path algorithm
 * Unit testing with GoogleTest
 * Benchmarking and Runtime Profiling
@@ -19,12 +20,12 @@ So in general, a refresh is needed sometimes 😊.
 In this project I aim to perform an experiment over one of the most famous algorithms of all time (Lazy Dijkstra).  
 Here an undirected-non-negative-weighted graph is a must to run Dijkstra and in the main.cpp that graph is created.  
 In the creation of that graph I inserted a 15/21 probability of zero value --> increase sparsity statistically.  
-The created adjacency matrix is passed to the Graph Class that builds up a more scalable nested-object-like structure adjacency list based.  
+The created adjacency matrix is passed to two Graph implementations that build up different adjacency list structures for comparison purposes.  
 Adjacency matrices are pretty handy sometimes and generating graphs is more immediate (to me), but some algorithms run pretty bad on  
 adjacency matrices and using lists is faster, which is more convenient for certain applications.  
-Last thing, below there is a chart which exposes the runtime benchmark for the algorithms and initially I made a mistake.  
+Last thing, below there is a chart which exposes the runtime benchmark for the algorithms. Initially I made a mistake:  
 I implemented a priority queue max-heap based and then, the execution time exploded. After having learned the lesson, I corrected to implement a min-heap one.  
-After having seen the execution time becoming O(E log E) - like instead of quadratic, I could start sleeping well again at night.
+After having seen the execution time becoming O(E log E) instead of quadratic, I could start sleeping well again.
 
 ---
 
@@ -38,12 +39,14 @@ This project is intended as both:
 with focus on:
 
 * algorithmic complexity
+* cache-aware data structure design
+* memory layout and contiguous storage
 * memory ownership
 * RAII
 * testing
 * profiling
----
 
+---
 
 ## Project Structure
 
@@ -53,18 +56,22 @@ with focus on:
 ├── include/
 │   ├── edge.h
 │   ├── graph.h
+│   ├── graph_flat.h
 │   └── node.h
 ├── src/
 │   ├── edge.cpp
 │   ├── graph.cpp
+│   ├── graph_flat.cpp
 │   ├── main.cpp
 │   └── node.cpp
 ├── tests/
 │   ├── test_edge.cpp
 │   ├── test_graph.cpp
+│   ├── test_graph_flat.cpp
 │   └── test_node.cpp
 └── images/
-    └── exec_time_benchmark.png
+    ├── exec_time_benchmark.png
+    └── exec_time_benchmark_flat_vs_nested.png
 ```
 
 ---
@@ -74,23 +81,54 @@ with focus on:
 ### Graph Representation
 
 The graph is initially generated as a weighted adjacency matrix and internally converted into an adjacency-list representation.
+Two implementations are provided and benchmarked against each other.
 
 #### Sparse Graph 
 
-Zero or negative weights are ignored during node construction:
+Zero or negative weights are ignored during construction:
 
 * `0` represents no connection
 * only positive-weight edges are stored
 * 15/21 probability of zero value
 * Diagonal elements are null
 
-This is done for creating an undirected weighted graph.
+This produces an undirected weighted sparse graph.
+
+---
+
+### Nested Adjacency List (`graph`)
+
+The classic object-oriented implementation:
+
+* `std::vector<node>` where each node owns a `std::vector<edge>`
+* clean encapsulation, intuitive structure
+* each node's edge list is a separate heap allocation
+* pointer chasing at traversal time — cache unfriendly at large scale
+
+---
+
+### Flat Adjacency List (`graph_flat`)
+
+A cache-aware implementation using three contiguous vectors:
+
+* `edge_targets` — destination node ids, all stored contiguously
+* `edge_weights` — corresponding weights, all stored contiguously  
+* `offsets` — maps each node index to its starting position in the flat arrays
+
+No intermediate objects, no per-node heap allocations. Neighbour traversal is a direct index scan over contiguous memory, prefetcher-friendly by design.
+
+```cpp
+for (int e = offsets[i]; e < offsets[i+1]; e++) {
+    int neighbour = edge_targets[e];
+    int weight    = edge_weights[e];
+}
+```
 
 ---
 
 ## Lazy Dijkstra Algorithm
 
-The project implements a lazy version of Dijkstra's shortest-path algorithm using:
+Both implementations provide a lazy version of Dijkstra's shortest-path algorithm using:
 
 * adjacency lists
 * `std::priority_queue`
@@ -123,12 +161,20 @@ Covered components:
 * negative-weight skipping
 * adjacency construction validation
 
-### Graph
+### Graph (nested)
 
 * shortest path correctness
 * disconnected graph handling
 * path reconstruction
 * distance validation
+
+### Graph Flat
+
+* flat array construction correctness
+* offset mapping validation
+* zero-weight edge filtering
+* isolated node handling
+* shortest path correctness
 
 ---
 
@@ -136,33 +182,39 @@ Covered components:
 
 The project includes runtime profiling experiments for Dijkstra's algorithm.
 
-Benchmarking currently explores:
+Benchmarking explores:
 
-* runtime scaling
-* heap ordering effects
-* average execution time across multiple randomized graphs
+* runtime scaling across node counts (10 to 5000)
+* heap ordering effects (max-heap vs min-heap)
+* nested vs flat adjacency list performance
+* compiler optimization flag impact (`-O3`, `-march=native`, MSVC `/O2 /GL /LTCG`)
+* average execution time across 50 independent randomized graphs per node count
 
-The runtime is measured using:
+Runtime is measured using:
 
 ```cpp
 std::chrono::high_resolution_clock
 ```
 
-and averaged over 50 independent runs for each node number. 
+---
 
-Here below the results: 
-* Orange Plot: Min-heap implementation 
-* Blue Plot: Max-heap implementation (implemented by mistake by the author initially)  
+## Benchmark Results (Debug Build)
+
+### Min-heap vs Max-heap (nested implementation)
 
 ![Benchmark Plot](./images/exec_time_benchmark.png)
 
+* Orange Plot: Min-heap implementation
+* Blue Plot: Max-heap implementation (implemented by mistake initially)
 
-### In which some values are:  
+#### Selected values (min-heap):
 
     - 10 nodes   → ~0.08 us  
     - 100 nodes  → ~195 us  
     - 1000 nodes → ~9.7 ms  
     - 5000 nodes → ~215 ms  
+
+---
 
 
 ## Current Observations
@@ -175,7 +227,43 @@ Here below the results:
     ```text
     O(E log E)
     ```
+* Flat adjacency list delivers up to 2.5x speedup over nested at 5000 nodes with no algorithmic change — purely from memory layout.
+* Compiler flags matter but cannot compensate for cache-unfriendly data structures.
 * Peak memory usage observed around 200 MB for large graph sizes (5k x 5k matrices).
+* Adjacency matrices are extremely memory expensive for sparse graph representations.
+---
 
-* Adjacency matrices are extremely memory expensive for sparse graphs representations. 
+### Nested vs Flat Adjacency List (Release Build, MSVC /O2 /GL /LTCG)
+
+The previous experiment showed interesting results but honestly, that implementation is not completely satisfying.  
+This result can be quickened up for sure enabling the release build in the IDE.  
+In addition to that, I know for sure that C++ can deliver faster results and one of the problem here is memory layout.  
+I implemented the adjacency list using a nested data structure, pure OOP like. But that is inefficient and not exactly cache friendly.  
+
+#### Solution: store the adjacency list in a contigous memory manner.
+
+![Flat vs Nested Benchmark](./images/exec_time_benchmark_flat_vs_nested.png)
+
+The following result speaks alone. Of course there was a huge benefit thanks to the Compiler Optimization, at high node values (5000) the execution time is about 40% reduced.
+But the big stake is thanks to the different memory layout (the flat one). which reduces by 97% the execution time.
+
+#### Selected values:
+
+| Nodes | Nested (us) | Flat (us) | Speedup |
+|-------|-------------|-----------|---------|
+| 10    | 2.58        | 1.54      | 1.7x    |
+| 100   | 88.5        | 23.34     | 3.8x    |
+| 500   | 1474.3      | 165.8     | 8.9x    |
+| 1000  | 4610.3      | 458.4     | 10.1x   |
+| 3000  | 53160.7     | 2506.24   | 21.2x   |
+| 5000  | 129260      | 5995.68   | 21.6x   |
+
+At large scale the nested structure suffers from scattered heap allocations, while the flat layout  
+keeps all edge data contiguous and prefetcher-friendly.
+
+The speedup rate grows with graph size, undoublty the flat memory layout access is way faster than scattered memory data structures.
+Those benefits are more evident when scaling.
+
+
+
 ---

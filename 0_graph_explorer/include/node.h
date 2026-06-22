@@ -16,7 +16,7 @@ class node
             const int& node_number
         );
         int get_id() const {return id; };
-        std::vector<edge> get_edge_vect() const {return edge_vect; };
+        const std::vector<edge>& get_edge_vect() const {return edge_vect; };
 
     private:
         std::vector<edge> edge_vect;
