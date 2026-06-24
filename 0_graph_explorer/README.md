@@ -10,7 +10,7 @@ C++ graph exploration with shortest-path-scanner project focused on:
 * Benchmarking and Runtime Profiling
 
 --- 
-### Quick context:  
+### Quick context:
 Graphs can be used to model an enormous amount of things in the world.  
 I can use graphs to model probabilistic events, analog and digital electronics circuits, the sequences of few elements    
 extracted from a jar, maps and so on... This makes their utilization so powerful that a lot of my tasks at work, are enormously simplified.  
@@ -22,10 +22,7 @@ Here an undirected-non-negative-weighted graph is a must to run Dijkstra and in 
 In the creation of that graph I inserted a 15/21 probability of zero value --> increase sparsity statistically.  
 The created adjacency matrix is passed to two Graph implementations that build up different adjacency list structures for comparison purposes.  
 Adjacency matrices are pretty handy sometimes and generating graphs is more immediate (to me), but some algorithms run pretty bad on  
-adjacency matrices and using lists is faster, which is more convenient for certain applications.  
-Last thing, below there is a chart which exposes the runtime benchmark for the algorithms. Initially I made a mistake:  
-I implemented a priority queue max-heap based and then, the execution time exploded. After having learned the lesson, I corrected to implement a min-heap one.  
-After having seen the execution time becoming O(E log E) instead of quadratic, I could start sleeping well again.
+adjacency matrices and using lists is faster, which is more convenient for certain applications.
 
 ---
 
@@ -83,7 +80,7 @@ with focus on:
 The graph is initially generated as a weighted adjacency matrix and internally converted into an adjacency-list representation.
 Two implementations are provided and benchmarked against each other.
 
-#### Sparse Graph 
+#### Sparse Graph
 
 Zero or negative weights are ignored during construction:
 
@@ -112,7 +109,7 @@ The classic object-oriented implementation:
 A cache-aware implementation using three contiguous vectors:
 
 * `edge_targets` — destination node ids, all stored contiguously
-* `edge_weights` — corresponding weights, all stored contiguously  
+* `edge_weights` — corresponding weights, all stored contiguously
 * `offsets` — maps each node index to its starting position in the flat arrays
 
 No intermediate objects, no per-node heap allocations. Neighbour traversal is a direct index scan over contiguous memory, prefetcher-friendly by design.
@@ -180,74 +177,72 @@ Covered components:
 
 # Benchmarking
 
-The project includes runtime profiling experiments for Dijkstra's algorithm.
-
-Benchmarking explores:
-
-* runtime scaling across node counts (10 to 5000)
-* heap ordering effects (max-heap vs min-heap)
-* nested vs flat adjacency list performance
-* compiler optimization flag impact (`-O3`, `-march=native`, MSVC `/O2 /GL /LTCG`)
-* average execution time across 50 independent randomized graphs per node count
-
-Runtime is measured using:
-
-```cpp
-std::chrono::high_resolution_clock
-```
+The project includes runtime profiling experiments across multiple iterations.
+Each measurement is averaged over 50 independent runs on randomized graphs per node count,
+using `std::chrono::high_resolution_clock`.
 
 ---
 
-## Benchmark Results (Debug Build)
+## Iteration 1 — First Implementation (Debug Build, Nested Adjacency List)
 
-### Min-heap vs Max-heap (nested implementation)
+The first version used a nested OOP adjacency list, compiled in debug mode with no optimizations.
+
+The first attempt also contained a bug: the priority queue was implemented as a **max-heap** instead of a min-heap.
+The execution time exploded as a consequence. After correcting to a **min-heap** via `std::greater<>`, the algorithm
+recovered its expected O(E log E) behavior.
 
 ![Benchmark Plot](./images/exec_time_benchmark.png)
 
 * Orange Plot: Min-heap implementation
-* Blue Plot: Max-heap implementation (implemented by mistake initially)
+* Blue Plot: Max-heap implementation (implemented by mistake)
 
-#### Selected values (min-heap):
+#### Selected values (min-heap, debug):
 
     - 10 nodes   → ~0.08 us  
     - 100 nodes  → ~195 us  
     - 1000 nodes → ~9.7 ms  
     - 5000 nodes → ~215 ms  
 
+### Observations
+
+* Incorrect max-heap ordering drastically worsens performance → ≈ O(V²)
+* Proper min-heap ordering restores expected Dijkstra behavior → O(E log E)
+* Peak memory usage observed around 200 MB for large graph sizes (5k x 5k matrices)
+* Adjacency matrices are extremely memory expensive for sparse graph representations
+
 ---
 
+## Iteration 2 — Compiler Optimization (Release Build, Nested Adjacency List)
 
-## Current Observations
+After fixing the algorithm, the next step was enabling the Release build with explicit compiler flags:
 
-* Incorrect max-heap ordering drastically worsens performance.
-    ```text
-    ≈ O(V²)
-    ```
-* Proper min-heap ordering restores expected Dijkstra behavior.
-    ```text
-    O(E log E)
-    ```
-* Flat adjacency list delivers up to 2.5x speedup over nested at 5000 nodes with no algorithmic change — purely from memory layout.
-* Compiler flags matter but cannot compensate for cache-unfriendly data structures.
-* Peak memory usage observed around 200 MB for large graph sizes (5k x 5k matrices).
-* Adjacency matrices are extremely memory expensive for sparse graph representations.
+```
+MSVC: /O2 /GL /arch:AVX2 + /LTCG (Link Time Optimization)
+GCC/MinGW: -O3 -march=native -funroll-loops
+```
+
+At large node counts (5000 nodes) this alone reduced execution time by roughly 40% compared to the debug build —
+confirming that compiler optimizations matter, but only up to a point.
+
+The bottleneck was no longer the compiler. It was the data structure.
+
 ---
 
-### Nested vs Flat Adjacency List (Release Build, MSVC /O2 /GL /LTCG)
+## Iteration 3 — Flat Adjacency List (Release Build)
 
-The previous experiment showed interesting results but honestly, that implementation is not completely satisfying.  
-This result can be quickened up for sure enabling the release build in the IDE.  
-In addition to that, I know for sure that C++ can deliver faster results and one of the problem here is memory layout.  
-I implemented the adjacency list using a nested data structure, pure OOP like. But that is inefficient and not exactly cache friendly.  
+The nested structure allocates a separate heap block per node's edge list.
+At large scale this causes scattered memory access and cache misses that no compiler flag can fix.
 
-#### Solution: store the adjacency list in a contiguous memory manner.
+The solution was a flat contiguous adjacency list (`graph_flat`) where all edge data lives in three contiguous vectors.
+The Dijkstra inner loop now scans contiguous memory directly — no pointer chasing, prefetcher-friendly.
 
-The following result speaks alone. Of course there was a huge benefit thanks to the Compiler Optimization, at high node values (5000) the execution time is about 40% reduced.
-But the big stake is thanks to the different memory layout (the flat one). which reduces by 97% the execution time.
+* Blue Plot: OOP nested data structure
+* Orange Plot: flat vector data structure
+
 
 ![Flat vs Nested Benchmark](./images/exec_time_benchmark_flat_vs_nested.png)
 
-#### Selected values:
+#### Selected values (Release build, MSVC /O2 /GL /LTCG):
 
 | Nodes | Nested (us) | Flat (us) | Speedup |
 |-------|-------------|-----------|---------|
@@ -258,12 +253,13 @@ But the big stake is thanks to the different memory layout (the flat one). which
 | 3000  | 53160.7     | 2506.24   | 21.2x   |
 | 5000  | 129260      | 5995.68   | 21.6x   |
 
-At large scale the nested structure suffers from scattered heap allocations, while the flat layout  
-keeps all edge data contiguous and prefetcher-friendly.
+The speedup grows with graph size. At small node counts both structures fit in cache and behave similarly.
+At large scale the difference becomes decisive — 21x faster at 5000 nodes with no algorithmic change,
+purely from memory layout.
 
-The speedup rate grows with graph size, undoublty the flat memory layout access is way faster than scattered memory data structures.
-Those benefits are more evident when scaling.
+### Key takeaway
 
-
+Compiler flags matter but cannot compensate for cache-unfriendly data structures.
+The correct order of optimization is: fix the data structure first, then apply compiler flags.
 
 ---
